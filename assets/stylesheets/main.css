@@ -35,12 +35,6 @@ article, footer, div {
   width: 90%
 }
 
-.clearfix:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
 @media screen and (min-width: 800px) {
   article, footer {
     width: 730px;
@@ -48,7 +42,7 @@ article, footer, div {
 
   div {
     float: left;
-    width: 243.3px;
+    width: 243px;
   }
 }
 
