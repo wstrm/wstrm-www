@@ -1,0 +1,8 @@
+<small>
+  {{ if .Prev }}
+  <em>Previous: </em><a href="{{ .Prev.Permalink }}">{{ .Prev.Title }}</a><br />
+  {{ end }}
+  {{ if .Next }}
+  <em>Next: </em><a href="{{ .Next.Permalink }}">{{ .Next.Title }}</a><br />
+  {{ end }}
+</small>

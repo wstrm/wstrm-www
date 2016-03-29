@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ .Site.Title }}</title>
+    <base href="{{ .Site.BaseURL }}">
+    <link rel="canonical" href="{{ .Permalink }}">
+    <link href="{{ .RSSlink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <header>
+      <a href="/">
+        <h1>{{ .Site.Title }}</h1>
+        <small>{{ .Site.Params.Subtitle }}</small>
+      </a>
+      <navbar>
+        <ul>
+          <li><a href="/posts">Posts</a></li>
+          <li><a href="https://github.com/willeponken">Git</a></li>
+          <li><a href="http://hype.willeponken.me">Hyperboria</a></li>
+        </ul>
+      </navbar>
+    </header>

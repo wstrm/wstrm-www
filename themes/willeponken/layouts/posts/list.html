@@ -1,0 +1,9 @@
+<li class="postlist">
+  <h4><a href="{{ .Permalink }}">{{ .Title }}</a></h4>
+  <small>{{ .Date.Format "Mon, Jan 2, 2006" }} -
+  {{ range .Params.categories }}
+  <a href="/categories/{{ . | urlize }}">{{ . }}</a> 
+  {{ end }}
+  </small>
+  <p>{{ .Description }}</p>
+</li>

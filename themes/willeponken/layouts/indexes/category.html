@@ -1,0 +1,13 @@
+{{ partial "header.html" . }}
+<article class="clearfix">
+  <h1>Categories</h1>
+  <h2>Posts in {{ .Title }}</h2>
+  <section>
+    <ul>
+      {{ range .Data.Pages }}
+      {{ .Render "summary" }}
+      {{ end }}
+    </ul>
+  </section>
+</article>
+{{ partial "footer.html" }}

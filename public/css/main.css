@@ -2,6 +2,7 @@ body {
   background: #3F3F3F;
   color: #DCDCCC;
   font-family: serif;
+  line-height: 1.4;
 }
 
 header {
@@ -10,18 +11,43 @@ header {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  margin-top: 30px;
-  margin-bottom: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+
+h1 {
+  color: #be5be3;
+  font-family: sans-serif;
 }
 
 header h1 {
-  color: #be5be3;
   -webkit-transform: rotate(-5deg);
   -moz-transform: rotate(-5deg);
   -ms-transform: rotate(-5deg);
   -o-transform: rotate(-5deg);
   transform: rotate(-5deg);
   margin: 2px;
+}
+
+header a {
+  text-decoration: none;
+}
+
+navbar {
+  margin-bottom: 10px;
+}
+
+navbar ul {
+  padding: 0;
+  font-size: 0.8em;
+}
+
+navbar li {
+  display: inline;
+  list-style-type: none;
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 h2, h3, h4, h5 {
@@ -35,6 +61,12 @@ article, footer, div {
   width: 90%
 }
 
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 @media screen and (min-width: 800px) {
   article, footer {
     width: 730px;
@@ -42,7 +74,7 @@ article, footer, div {
 
   div {
     float: left;
-    width: 243px;
+    width: 243.3px;
   }
 }
 
@@ -82,4 +114,13 @@ a {
 
 a:hover {
   color: #CC9393;
+}
+
+.postlist p {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1.posttitle {
+  margin: 0;
 }

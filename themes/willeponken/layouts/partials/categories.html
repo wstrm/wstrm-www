@@ -1,0 +1,6 @@
+<small>
+  <em>Categories: </em>
+  {{ range .Params.categories }}
+  <a href="/categories/{{ . | urlize }}">{{ . }}</a>
+  {{ end }}
+</small><br />
