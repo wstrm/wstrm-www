@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on willeponken</title>
-    <link>https://willeponken.me/posts/</link>
+    <link>http://willeponken.me/posts/</link>
     <description>Recent content in Posts on willeponken</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Tue, 29 Mar 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://willeponken.me/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://willeponken.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Just a test post, yes.</title>
-      <link>https://willeponken.me/posts/first-post/</link>
+      <link>http://willeponken.me/posts/first-post/</link>
       <pubDate>Tue, 29 Mar 2016 00:00:00 +0000</pubDate>
       
-      <guid>https://willeponken.me/posts/first-post/</guid>
+      <guid>http://willeponken.me/posts/first-post/</guid>
       <description>
 
 &lt;h2 id=&#34;uuuuh:f3b70d76da56e15d82042b9ef176d71f&#34;&gt;Uuuuh&lt;/h2&gt;
