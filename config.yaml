@@ -4,7 +4,7 @@ layoutdir: "layouts"
 publishdir: "public"
 indexes:
   category: "categories"
-baseurl: "https://willeponken.me"
+baseurl: "http://willeponken.me"
 title: "willeponken"
 subtitle: "William Wennerström"
 canonifyurls: true
