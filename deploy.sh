@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[0;32mDeploying updates to Github...\033[0m"
+echo -e "\033[0;32mDeploying updates to git...\033[0m"
 
 # Build the project.
 hugo
@@ -17,4 +17,4 @@ git commit -m "$msg"
 
 # Push source and build repos.
 git push origin devel
-git subtree push --prefix=public git@github.com:willeponken/willeponken.github.io.git master
+git subtree push --prefix=public git@gitlab.com:willeponken/willeponken.gitlab.io.git master
