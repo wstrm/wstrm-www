@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>willeponken</title>
+    <base href="https://willeponken.me">
+    <link rel="canonical" href="https://willeponken.me/posts/gentoo_with_dm-crypt_luks/">
+    <link href="" rel="alternate" type="application/rss+xml" title="willeponken" />
+    <link rel="shortcut icon" type="image/png" href="https://willeponken.me/favicon.png">
+    <link rel="stylesheet" href="https://willeponken.me/css/main.css" />
+  </head>
+  <body>
+    <header>
+      <a href="https://willeponken.me/">
+        <h1>willeponken</h1>
+        <small>William Wennerström</small>
+      </a>
+      <navbar>
+        <ul>
+          <li><a href="https://willeponken.me/posts">Posts</a></li>
+          <li><a href="https://github.com/willeponken">Git</a></li>
+          <li><a href="http://hype.willeponken.me">Hyperboria</a></li>
+        </ul>
+      </navbar>
+    </header>
+
+<article class="clearfix">
+  <h1 class="posttitle">Gentoo with DM-Crypt LUKS (Work In Progress)</h1>
+  <small>Sat May 21, 2016 - 
+    
+    <a href="https://willeponken.me/categories/gentoo">gentoo</a> 
+    
+    <a href="https://willeponken.me/categories/os">os</a> 
+    
+    <a href="https://willeponken.me/categories/encryption">encryption</a> 
+    
+  </small>
+  <hr />
+  <section>
+    
+
+<p>This article serves as somekind of meta instruction for installing Gentoo with DM-Crypt LUKS.</p>
+
+<p>If this is your first time installing Gentoo it&rsquo;s probably a better idea to follow their tutorial on https:/wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation</p>
+
+<h2 id="burn-minimal-installation-cd-to-usb:bb49be16fd08f75f2aac8764b2e4441f">Burn Minimal Installation CD to USB</h2>
+
+<p>Download the Minimal Installation CD from: <a href="https://www.gentoo.org/downloads/">https://www.gentoo.org/downloads/</a></p>
+
+<p>Write the ISO to the USB drive using DD:</p>
+
+<pre><code>dd if=/path/to/image.iso of=/dev/sdX bs=8192k
+</code></pre>
+
+<h2 id="boot-and-connect-to-a-network:bb49be16fd08f75f2aac8764b2e4441f">Boot and connect to a network</h2>
+
+<p>Either connect a network cable, or connect to a WLAN using:</p>
+
+<pre><code>iwconfig eth0 essid &lt;ssid-of-network&gt;
+
+# set hex WEP key
+iwconfig eth0 key &lt;hex-key&gt;
+# or use ASCII WEP key
+iwconfig eth0 key s:&lt;ascii-key&gt;
+</code></pre>
+
+<h2 id="prepare-usb-key-and-filesystem:bb49be16fd08f75f2aac8764b2e4441f">Prepare USB-key and filesystem</h2>
+
+<p>Check which USB storage device to use:</p>
+
+<pre><code>lsblk
+</code></pre>
+
+<p>After you have found the USB storage device create a primary partition on it:</p>
+
+<pre><code>parted -a optimal /dev/sdY
+</code></pre>
+
+<p>Then inside parted issue these commands:</p>
+
+<pre><code>(parted) mklabel gpt
+(parted) mkpart primary fat32 0% 100%
+(parted) set 1 BOOT on
+(parted) quit
+</code></pre>
+
+<p>Format the USB storage device to <code>fat32</code>:</p>
+
+<pre><code>mkfs.vfat -F32 /dev/sdY1
+</code></pre>
+
+<p>Temporarily mount the partition:</p>
+
+<pre><code>mkdir -v /tmp/efiboot
+mount -v -t vfat /dev/sdY1 /tmp/efiboot
+</code></pre>
+
+<h2 id="create-keyfile-for-luks:bb49be16fd08f75f2aac8764b2e4441f">Create Keyfile for LUKS</h2>
+
+<pre><code>export GPG_TTY=$(tty)
+dd if=/dev/urandom bs=8388607 count=1 | gpg --symmetric --cipher-algo AES256 --output /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg
+</code></pre>
+
+<p>To be continued&hellip;</p>
+
+  </section>
+  <section>
+    <p>
+      <small>
+  <em>Categories: </em>
+  
+  <a href="https://willeponken.me/categories/gentoo">gentoo</a>
+  
+  <a href="https://willeponken.me/categories/os">os</a>
+  
+  <a href="https://willeponken.me/categories/encryption">encryption</a>
+  
+</small><br />
+
+      <small>
+  
+  
+</small>
+
+    </p>
+  </section>
+</article>
+    <footer>
+      <address>
+        <small>
+          <strong>E-mail:</strong> {myfirstname}@willeponken.me<br />
+          <strong>Public key:</strong> <a href="https://keybase.io/willeponken/key.asc">keybase.io/willeponken/key.asc</a><br />
+        </small>
+      </address>
+    </footer>
+  </body>
+
+</html>
+

@@ -2,23 +2,83 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>willeponken</title>
-    <link>http://willeponken.me/</link>
+    <link>https://willeponken.me/</link>
     <description>Recent content on willeponken</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 29 Mar 2016 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://willeponken.me/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 21 May 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://willeponken.me/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Just a test post, yes.</title>
-      <link>http://willeponken.me/posts/first-post/</link>
-      <pubDate>Tue, 29 Mar 2016 00:00:00 +0000</pubDate>
+      <title>Gentoo with DM-Crypt LUKS (Work In Progress)</title>
+      <link>https://willeponken.me/posts/gentoo_with_dm-crypt_luks/</link>
+      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://willeponken.me/posts/first-post/</guid>
+      <guid>https://willeponken.me/posts/gentoo_with_dm-crypt_luks/</guid>
       <description>
 
-&lt;h2 id=&#34;uuuuh:f3b70d76da56e15d82042b9ef176d71f&#34;&gt;Uuuuh&lt;/h2&gt;
+&lt;p&gt;This article serves as somekind of meta instruction for installing Gentoo with DM-Crypt LUKS.&lt;/p&gt;
 
-&lt;p&gt;I&amp;rsquo;ll write some stuff here, yes. Lalala lalala lalala, lalalala la. Lalalala!&lt;/p&gt;
+&lt;p&gt;If this is your first time installing Gentoo it&amp;rsquo;s probably a better idea to follow their tutorial on https:/wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation&lt;/p&gt;
+
+&lt;h2 id=&#34;burn-minimal-installation-cd-to-usb:bb49be16fd08f75f2aac8764b2e4441f&#34;&gt;Burn Minimal Installation CD to USB&lt;/h2&gt;
+
+&lt;p&gt;Download the Minimal Installation CD from: &lt;a href=&#34;https://www.gentoo.org/downloads/&#34;&gt;https://www.gentoo.org/downloads/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Write the ISO to the USB drive using DD:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;dd if=/path/to/image.iso of=/dev/sdX bs=8192k
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;boot-and-connect-to-a-network:bb49be16fd08f75f2aac8764b2e4441f&#34;&gt;Boot and connect to a network&lt;/h2&gt;
+
+&lt;p&gt;Either connect a network cable, or connect to a WLAN using:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;iwconfig eth0 essid &amp;lt;ssid-of-network&amp;gt;
+
+# set hex WEP key
+iwconfig eth0 key &amp;lt;hex-key&amp;gt;
+# or use ASCII WEP key
+iwconfig eth0 key s:&amp;lt;ascii-key&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;prepare-usb-key-and-filesystem:bb49be16fd08f75f2aac8764b2e4441f&#34;&gt;Prepare USB-key and filesystem&lt;/h2&gt;
+
+&lt;p&gt;Check which USB storage device to use:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;lsblk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After you have found the USB storage device create a primary partition on it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;parted -a optimal /dev/sdY
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then inside parted issue these commands:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(parted) mklabel gpt
+(parted) mkpart primary fat32 0% 100%
+(parted) set 1 BOOT on
+(parted) quit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Format the USB storage device to &lt;code&gt;fat32&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkfs.vfat -F32 /dev/sdY1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Temporarily mount the partition:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir -v /tmp/efiboot
+mount -v -t vfat /dev/sdY1 /tmp/efiboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-keyfile-for-luks:bb49be16fd08f75f2aac8764b2e4441f&#34;&gt;Create Keyfile for LUKS&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;export GPG_TTY=$(tty)
+dd if=/dev/urandom bs=8388607 count=1 | gpg --symmetric --cipher-algo AES256 --output /tmp/efiboot/&amp;lt;hostname&amp;gt;-luks-key.gpg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To be continued&amp;hellip;&lt;/p&gt;
 </description>
     </item>
     
