@@ -727,7 +727,7 @@ auto-sync = yes
 ... significant amounts of output suppressed in the above ...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Bild the kernel using &lt;code&gt;buildkernel&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Build the kernel using &lt;code&gt;buildkernel&lt;/code&gt;:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;(chroot) buildkernel --ask --verbose
 &lt;/code&gt;&lt;/pre&gt;

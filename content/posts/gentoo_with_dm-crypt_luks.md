@@ -714,7 +714,7 @@ Example configuration:
 ... significant amounts of output suppressed in the above ...
 ```
 
-Bild the kernel using `buildkernel`:
+Build the kernel using `buildkernel`:
 ```
 (chroot) buildkernel --ask --verbose
 ```
