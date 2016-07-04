@@ -108,7 +108,7 @@ dd if=/dev/urandom of=/dev/sdXn bs=1M
 ## Format main parition with LUKS
 Unlock USB keyfile and let `cryptsetup` format it as a LUKS partition:
 ```
-gpg --decrypt /tmp/efiboot/<hostname>-luks-key.gpg | cryptsetup --cipher serpent-xts-plain65 --key-size 512 --hash sha512 --key-file - luksFormat /dev/sdXn
+gpg --decrypt /tmp/efiboot/<hostname>-luks-key.gpg | cryptsetup --key-size 512 --hash sha512 --key-file - luksFormat /dev/sdXn
 ```
 
 Verify everything went well:
@@ -149,7 +149,7 @@ lvcreate --size <size-of-ram+2>G --name swap vg1
 
 Create LVM logical volume (LV) for root:
 ```
-lvcreate --size 40G --name rot vg1
+lvcreate --size 40G --name root vg1
 ```
 
 Create LVM logical volume (LV) for home:
@@ -203,7 +203,7 @@ mount -t ext4 /dev/mapper/vg1-home /mnt/gentoo/home
 
 Unmount USB boot key's EFI partition:
 ```
-unmount /dev/efiboot
+umount /tmp/efiboot
 ```
 
 Take note of the PARTUUIDs for the USB storage partition and the main partition:
@@ -224,16 +224,21 @@ Change to the root mountpoint:
 cd /mnt/gentoo
 ```
 
-Download the latest Stage 3 files (replace `YYYYMMDD` with the current release):
+Download the latest Stage 3 files:
 ```
-wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
-wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.CONTENTS
-wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.DIGESTS.asc
+links http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
+```
+
+Look for (find the files where YYYYMMDD is the latest date):
+```
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.CONTENTS
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.DIGESTS.asc
 ```
 
 Retrieve the public key:
 ```
-gpg --keyserver subkeys.pgp.net --recv-keys 0x9E6438C817072058
+gpg --recv-keys 0x9E6438C817072058
 ```
 
 Verify the cryptographic signature:
