@@ -88,11 +88,15 @@ Inside parted issue:
 ```
 (parted) unit s
 (parted) print free
+
 ...
+
 Number  Start       End         Size        File System   Name          Flags
-#       80000000s   500000000s  300000000s  Free Space    ...           ...
+        32s         251658206s  251658173s  Free Space
+
 ...
-(parted) mkpart primary 80000000s 500000000s
+
+(parted) mkpart primary 2048s 100%
 ```
 
 Make sure everything is correct:
@@ -508,7 +512,7 @@ Explicity allow the packages from `sakaki-tools` because they're marked as unsta
 (chroot) mkdir -p -v /etc/portage/package.accept_keywords
 (chroot) touch /etc/portage/package.accept_keywords/zzz_via_autounmask
 (chroot) echo "*/*::sakaki-tools ~amd64" >> /etc/portage/package.accept_keywords/sakaki-tools-repo
-(chroot) echo -e "# all versions of efitools currently marked as ~ in Gentoo tree\napp-crypt/efitools ~amd64" >> /etc/portage/package.accept_keywords/efitools<Paste>
+(chroot) echo -e "# all versions of efitools currently marked as ~ in Gentoo tree\napp-crypt/efitools ~amd64" >> /etc/portage/package.accept_keywords/efitools
 ```
 
 Update `@world`:
