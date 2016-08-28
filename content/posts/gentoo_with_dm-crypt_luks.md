@@ -462,57 +462,20 @@ Choose the correct one (strip out`.map.gz`) and edit `/etc/conf.d/keymaps`:
 keymap="sv"
 ```
 
-## Fix for emerge output due to multi-job support
+## Some minor fixes (optional)
 
-Install needed packages:
+If you want to use LibreSSL instead of OpenSSL follow the guide here:
+[https://wiki.gentoo.org/wiki/Project:LibreSSL](https://wiki.gentoo.org/wiki/Project:LibreSSL)
+
+Use directories for package.use, package.mask, etc.:
 ```
 (chroot) mkdir -p -v /etc/portage/package.use
 (chroot) touch /etc/portage/package.use/zzz_via_autounmask
-(chroot) echo -e "# required by asciidoc (pulled in by git)\napp-text/texlive-core xetex" >> /etc/portage/package.use/texlive-core
-(chroot) emerge --ask --verbose dev-vcs/git
-```
-
-Add the `sakaki-tools` repository by editing `/etc/portage/repos.conf/sakaki-tools.conf`:
-```
-[sakaki-tools]
-
-# Various utility ebuilds for Gentoo on EFI
-# Maintainer: sakaki (sakaki@deciban.com)
-
-location = /usr/local/portage/sakaki-tools
-sync-type = git
-sync-uri = https://github.com/sakaki-/sakaki-tools.git
-priority = 50
-auto-sync = yes
-```
-
-Pull in the new overlay:
-```
-(chroot) emaint sync --repo sakaki-tools
-```
-
-Wildcard mask everything in `sakaki-tools`:
-```
 (chroot) mkdir -p -v /etc/portage/package.mask
-(chroot) echo '*/*::sakaki-tools' >> /etc/portage/package.mask/sakaki-tools-repo
-```
-
-Unmask only the packages we need:
-```
 (chroot) mkdir -p -v /etc/portage/package.unmask
 (chroot) touch /etc/portage/package.unmask/zzz_via_autounmask
-(chroot) echo "app-portage/showem::sakaki-tools" >> /etc/portage/package.unmask/showem
-(chroot) echo "sys-kernel/buildkernel::sakaki-tools" >> /etc/portage/package.unmask/buildkernel
-(chroot) echo "app-portage/genup::sakaki-tools" >> /etc/portage/package.unmask/genup
-(chroot) echo "app-crypt/staticgpg::sakaki-tools" >> /etc/portage/package.unmask/staticgpg
-```
-
-Explicity allow the packages from `sakaki-tools` because they're marked as unstable:
-```
 (chroot) mkdir -p -v /etc/portage/package.accept_keywords
 (chroot) touch /etc/portage/package.accept_keywords/zzz_via_autounmask
-(chroot) echo "*/*::sakaki-tools ~amd64" >> /etc/portage/package.accept_keywords/sakaki-tools-repo
-(chroot) echo -e "# all versions of efitools currently marked as ~ in Gentoo tree\napp-crypt/efitools ~amd64" >> /etc/portage/package.accept_keywords/efitools
 ```
 
 Update `@world`:
@@ -547,12 +510,10 @@ Make sure `/usr/src/linux` points to current kernel version:
 (chroot) eselect kernel list
 ```
 
-Emerge `buildkernel` and additional packages:
+Emerge `genkernel-next` and additional packages:
 ```
-(chroot) echo -e "# ensure we can generate a bootable kernel and initramfs\nsys-kernel/genkernel-next cryptsetup gpg plymouth" >> /etc/portage/package.use/genkernel-next
-(chroot) echo -e "# for a smooth transition to Gnome\nsys-boot/plymouth gdm" >> /etc/portage/package.use/plymouth
-(chroot) echo -e "# required by plymouth (kernel mode setting library)\nx11-libs/libdrm libkms" >> /etc/portage/package.use/libkms
-(chroot) emerge --ask --verbose sys-kernel/buildkernel app-crypt/efitools
+(chroot) echo -e "# ensure we can generate a bootable kernel and initramfs\nsys-kernel/genkernel-next cryptsetup gpg" >> /etc/portage/package.use/genkernel-next
+(chroot) emerge --ask --verbose sys-kernel/genkernel-next app-crypt/efitools
 ```
 
 Setup buildkernel:
