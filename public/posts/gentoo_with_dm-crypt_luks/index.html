@@ -18,8 +18,9 @@
       <navbar>
         <ul>
           <li><a href="https://willeponken.me/posts">Posts</a></li>
-          <li><a href="https://github.com/willeponken">Git</a></li>
-          <li><a href="http://hype.willeponken.me">Hyperboria</a></li>
+          <li><a href="https://github.com/willeponken">GitHub</a></li>
+          <li><a href="https://gitlab.com/u/willeponken">GitLab</a></li>
+          <li><a href="http://[fc3b:f1c1:b985:6dab:fb9:742:bb07:a7ba]">Hyperboria</a></li>
         </ul>
       </navbar>
     </header>
@@ -45,7 +46,7 @@
 
 <p>If this is your first time installing Gentoo it&rsquo;s probably a better idea to follow <em>Sakaki&rsquo;s EFI Install Guide</em>, or follow <em>Gentoo&rsquo;s Handbook</em>: https:/wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation</p>
 
-<h2 id="burn-minimal-installation-cd-to-usb:bb49be16fd08f75f2aac8764b2e4441f">Burn Minimal Installation CD to USB</h2>
+<h2 id="burn-minimal-installation-cd-to-usb">Burn Minimal Installation CD to USB</h2>
 
 <p>Download the Minimal Installation CD from: <a href="https://www.gentoo.org/downloads/">https://www.gentoo.org/downloads/</a></p>
 
@@ -54,7 +55,7 @@
 <pre><code>dd if=/path/to/image.iso of=/dev/sdX bs=8192k
 </code></pre>
 
-<h2 id="boot-and-connect-to-a-network:bb49be16fd08f75f2aac8764b2e4441f">Boot and connect to a network</h2>
+<h2 id="boot-and-connect-to-a-network">Boot and connect to a network</h2>
 
 <p>Either connect a network cable, or connect to a WLAN using:</p>
 
@@ -66,7 +67,7 @@ iwconfig eth0 key &lt;hex-key&gt;
 iwconfig eth0 key s:&lt;ascii-key&gt;
 </code></pre>
 
-<h2 id="prepare-usb-key-and-its-filesystem:bb49be16fd08f75f2aac8764b2e4441f">Prepare USB-key and its filesystem</h2>
+<h2 id="prepare-usb-key-and-its-filesystem">Prepare USB-key and its filesystem</h2>
 
 <p>Check which USB storage device to use:</p>
 
@@ -97,13 +98,13 @@ iwconfig eth0 key s:&lt;ascii-key&gt;
 mount -t vfat /dev/sdY1 /tmp/efiboot
 </code></pre>
 
-<h2 id="create-keyfile-for-luks:bb49be16fd08f75f2aac8764b2e4441f">Create Keyfile for LUKS</h2>
+<h2 id="create-keyfile-for-luks">Create Keyfile for LUKS</h2>
 
 <pre><code>export GPG_TTY=$(tty)
 dd if=/dev/urandom bs=8388607 count=1 | gpg --symmetric --cipher-algo AES256 --output /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg
 </code></pre>
 
-<h2 id="create-gpt-partition-on-main-storage:bb49be16fd08f75f2aac8764b2e4441f">Create GPT partition on main storage</h2>
+<h2 id="create-gpt-partition-on-main-storage">Create GPT partition on main storage</h2>
 
 <p>Find the main storage drive using:</p>
 
@@ -119,11 +120,15 @@ dd if=/dev/urandom bs=8388607 count=1 | gpg --symmetric --cipher-algo AES256 --o
 
 <pre><code>(parted) unit s
 (parted) print free
+
 ...
+
 Number  Start       End         Size        File System   Name          Flags
-#       80000000s   500000000s  300000000s  Free Space    ...           ...
+        32s         251658206s  251658173s  Free Space
+
 ...
-(parted) mkpart primary 80000000s 500000000s
+
+(parted) mkpart primary 2048s 100%
 </code></pre>
 
 <p>Make sure everything is correct:</p>
@@ -136,11 +141,11 @@ Number  Start       End         Size        File System   Name          Flags
 <pre><code>dd if=/dev/urandom of=/dev/sdXn bs=1M
 </code></pre>
 
-<h2 id="format-main-parition-with-luks:bb49be16fd08f75f2aac8764b2e4441f">Format main parition with LUKS</h2>
+<h2 id="format-main-parition-with-luks">Format main parition with LUKS</h2>
 
 <p>Unlock USB keyfile and let <code>cryptsetup</code> format it as a LUKS partition:</p>
 
-<pre><code>gpg --decrypt /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg | cryptsetup --cipher serpent-xts-plain65 --key-size 512 --hash sha512 --key-file - luksFormat /dev/sdXn
+<pre><code>gpg --decrypt /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg | cryptsetup --key-size 512 --hash sha512 --key-file - luksFormat /dev/sdXn
 </code></pre>
 
 <p>Verify everything went well:</p>
@@ -153,7 +158,7 @@ Number  Start       End         Size        File System   Name          Flags
 <pre><code>cryptsetup luksHeaderBackup /dev/sdXn --header-backup-file /tmp/efiboot/&lt;hostname&gt;-luks-header.img
 </code></pre>
 
-<h2 id="setup-lvm-on-main-luks-partition:bb49be16fd08f75f2aac8764b2e4441f">Setup LVM on main LUKS partition</h2>
+<h2 id="setup-lvm-on-main-luks-partition">Setup LVM on main LUKS partition</h2>
 
 <p>Open the LUKS volume:</p>
 
@@ -182,7 +187,7 @@ Number  Start       End         Size        File System   Name          Flags
 
 <p>Create LVM logical volume (LV) for root:</p>
 
-<pre><code>lvcreate --size 40G --name rot vg1
+<pre><code>lvcreate --size 40G --name root vg1
 </code></pre>
 
 <p>Create LVM logical volume (LV) for home:</p>
@@ -198,7 +203,7 @@ lvdisplay
 ls /dev/mapper
 </code></pre>
 
-<h2 id="format-and-mount-the-logical-volumes-lvs:bb49be16fd08f75f2aac8764b2e4441f">Format and mount the logical volumes (LVs):</h2>
+<h2 id="format-and-mount-the-logical-volumes-lvs">Format and mount the logical volumes (LVs):</h2>
 
 <p>Format swap:</p>
 
@@ -237,7 +242,7 @@ ls /dev/mapper
 
 <p>Unmount USB boot key&rsquo;s EFI partition:</p>
 
-<pre><code>unmount /dev/efiboot
+<pre><code>umount /tmp/efiboot
 </code></pre>
 
 <p>Take note of the PARTUUIDs for the USB storage partition and the main partition:</p>
@@ -245,30 +250,35 @@ ls /dev/mapper
 <pre><code>blkid /dev/sdYn /dev/sdXn
 </code></pre>
 
-<h2 id="check-date-and-time:bb49be16fd08f75f2aac8764b2e4441f">Check date and time</h2>
+<h2 id="check-date-and-time">Check date and time</h2>
 
 <p>Make sure the time is correct:</p>
 
 <pre><code>date
 </code></pre>
 
-<h2 id="fetch-and-unpack-the-gentoo-stage-3-tarball:bb49be16fd08f75f2aac8764b2e4441f">Fetch and unpack the Gentoo Stage 3 Tarball:</h2>
+<h2 id="fetch-and-unpack-the-gentoo-stage-3-tarball">Fetch and unpack the Gentoo Stage 3 Tarball:</h2>
 
 <p>Change to the root mountpoint:</p>
 
 <pre><code>cd /mnt/gentoo
 </code></pre>
 
-<p>Download the latest Stage 3 files (replace <code>YYYYMMDD</code> with the current release):</p>
+<p>Download the latest Stage 3 files:</p>
 
-<pre><code>wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
-wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.CONTENTS
-wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.DIGESTS.asc
+<pre><code>links http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
+</code></pre>
+
+<p>Look for (find the files where YYYYMMDD is the latest date):</p>
+
+<pre><code>/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.CONTENTS
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.DIGESTS.asc
 </code></pre>
 
 <p>Retrieve the public key:</p>
 
-<pre><code>gpg --keyserver subkeys.pgp.net --recv-keys 0x9E6438C817072058
+<pre><code>gpg --recv-keys 0x9E6438C817072058
 </code></pre>
 
 <p>Verify the cryptographic signature:</p>
@@ -296,7 +306,7 @@ wget -c http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd
 <pre><code>cd
 </code></pre>
 
-<h2 id="setup-portage:bb49be16fd08f75f2aac8764b2e4441f">Setup Portage</h2>
+<h2 id="setup-portage">Setup Portage</h2>
 
 <p>Edit <code>/mnt/gentoo/root/.bashrc</code>:</p>
 
@@ -348,7 +358,7 @@ VIDEO_CARDS=&quot;intel i965&quot;
 INPUT_DEVICES=&quot;evdev synaptics&quot;
 </code></pre>
 
-<h2 id="prepare-and-enter-chroot:bb49be16fd08f75f2aac8764b2e4441f">Prepare and enter <code>chroot</code></h2>
+<h2 id="prepare-and-enter-chroot">Prepare and enter <code>chroot</code></h2>
 
 <p>Select the correct mirror for your location:</p>
 
@@ -403,7 +413,7 @@ source /etc/profile
 export PS1=&quot;(chroot) $PS1&quot;
 </code></pre>
 
-<h2 id="install-the-portage-tree:bb49be16fd08f75f2aac8764b2e4441f">Install the Portage Tree</h2>
+<h2 id="install-the-portage-tree">Install the Portage Tree</h2>
 
 <p>Install the latest Portage repository tree snapshot (it&rsquo;ll create all directories it&rsquo;s complaining about):</p>
 
@@ -435,7 +445,7 @@ export PS1=&quot;(chroot) $PS1&quot;
 <pre><code>(chroot) emerge --info
 </code></pre>
 
-<h2 id="setup-timezone-and-locale:bb49be16fd08f75f2aac8764b2e4441f">Setup timezone and locale</h2>
+<h2 id="setup-timezone-and-locale">Setup timezone and locale</h2>
 
 <p>Check for your timezone:</p>
 
@@ -488,57 +498,20 @@ en_US.UTF-8 UTF-8
 <pre><code>keymap=&quot;sv&quot;
 </code></pre>
 
-<h2 id="fix-for-emerge-output-due-to-multi-job-support:bb49be16fd08f75f2aac8764b2e4441f">Fix for emerge output due to multi-job support</h2>
+<h2 id="some-minor-fixes-optional">Some minor fixes (optional)</h2>
 
-<p>Install needed packages:</p>
+<p>If you want to use LibreSSL instead of OpenSSL follow the guide here:
+<a href="https://wiki.gentoo.org/wiki/Project:LibreSSL">https://wiki.gentoo.org/wiki/Project:LibreSSL</a></p>
+
+<p>Use directories for package.use, package.mask, etc.:</p>
 
 <pre><code>(chroot) mkdir -p -v /etc/portage/package.use
 (chroot) touch /etc/portage/package.use/zzz_via_autounmask
-(chroot) echo -e &quot;# required by asciidoc (pulled in by git)\napp-text/texlive-core xetex&quot; &gt;&gt; /etc/portage/package.use/texlive-core
-(chroot) emerge --ask --verbose dev-vcs/git
-</code></pre>
-
-<p>Add the <code>sakaki-tools</code> repository by editing <code>/etc/portage/repos.conf/sakaki-tools.conf</code>:</p>
-
-<pre><code>[sakaki-tools]
-
-# Various utility ebuilds for Gentoo on EFI
-# Maintainer: sakaki (sakaki@deciban.com)
-
-location = /usr/local/portage/sakaki-tools
-sync-type = git
-sync-uri = https://github.com/sakaki-/sakaki-tools.git
-priority = 50
-auto-sync = yes
-</code></pre>
-
-<p>Pull in the new overlay:</p>
-
-<pre><code>(chroot) emaint sync --repo sakaki-tools
-</code></pre>
-
-<p>Wildcard mask everything in <code>sakaki-tools</code>:</p>
-
-<pre><code>(chroot) mkdir -p -v /etc/portage/package.mask
-(chroot) echo '*/*::sakaki-tools' &gt;&gt; /etc/portage/package.mask/sakaki-tools-repo
-</code></pre>
-
-<p>Unmask only the packages we need:</p>
-
-<pre><code>(chroot) mkdir -p -v /etc/portage/package.unmask
+(chroot) mkdir -p -v /etc/portage/package.mask
+(chroot) mkdir -p -v /etc/portage/package.unmask
 (chroot) touch /etc/portage/package.unmask/zzz_via_autounmask
-(chroot) echo &quot;app-portage/showem::sakaki-tools&quot; &gt;&gt; /etc/portage/package.unmask/showem
-(chroot) echo &quot;sys-kernel/buildkernel::sakaki-tools&quot; &gt;&gt; /etc/portage/package.unmask/buildkernel
-(chroot) echo &quot;app-portage/genup::sakaki-tools&quot; &gt;&gt; /etc/portage/package.unmask/genup
-(chroot) echo &quot;app-crypt/staticgpg::sakaki-tools&quot; &gt;&gt; /etc/portage/package.unmask/staticgpg
-</code></pre>
-
-<p>Explicity allow the packages from <code>sakaki-tools</code> because they&rsquo;re marked as unstable:</p>
-
-<pre><code>(chroot) mkdir -p -v /etc/portage/package.accept_keywords
+(chroot) mkdir -p -v /etc/portage/package.accept_keywords
 (chroot) touch /etc/portage/package.accept_keywords/zzz_via_autounmask
-(chroot) echo &quot;*/*::sakaki-tools ~amd64&quot; &gt;&gt; /etc/portage/package.accept_keywords/sakaki-tools-repo
-(chroot) echo -e &quot;# all versions of efitools currently marked as ~ in Gentoo tree\napp-crypt/efitools ~amd64&quot; &gt;&gt; /etc/portage/package.accept_keywords/efitools&lt;Paste&gt;
 </code></pre>
 
 <p>Update <code>@world</code>:</p>
@@ -551,7 +524,7 @@ auto-sync = yes
 <pre><code>(chroot) dispatch-conf
 </code></pre>
 
-<h2 id="build-the-linux-kernel:bb49be16fd08f75f2aac8764b2e4441f">Build the Linux kernel</h2>
+<h2 id="build-the-linux-kernel">Build the Linux kernel</h2>
 
 <p>Permit licenses needed to build kernel:</p>
 
@@ -573,12 +546,10 @@ auto-sync = yes
 (chroot) eselect kernel list
 </code></pre>
 
-<p>Emerge <code>buildkernel</code> and additional packages:</p>
+<p>Emerge <code>genkernel-next</code> and additional packages:</p>
 
-<pre><code>(chroot) echo -e &quot;# ensure we can generate a bootable kernel and initramfs\nsys-kernel/genkernel-next cryptsetup gpg plymouth&quot; &gt;&gt; /etc/portage/package.use/genkernel-next
-(chroot) echo -e &quot;# for a smooth transition to Gnome\nsys-boot/plymouth gdm&quot; &gt;&gt; /etc/portage/package.use/plymouth
-(chroot) echo -e &quot;# required by plymouth (kernel mode setting library)\nx11-libs/libdrm libkms&quot; &gt;&gt; /etc/portage/package.use/libkms
-(chroot) emerge --ask --verbose sys-kernel/buildkernel app-crypt/efitools
+<pre><code>(chroot) echo -e &quot;# ensure we can generate a bootable kernel and initramfs\nsys-kernel/genkernel-next cryptsetup gpg&quot; &gt;&gt; /etc/portage/package.use/genkernel-next
+(chroot) emerge --ask --verbose sys-kernel/genkernel-next app-crypt/efitools
 </code></pre>
 
 <p>Setup buildkernel:</p>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on willeponken</title>
+    <link>https://willeponken.me/categories/</link>
+    <description>Recent content in Categories on willeponken</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://willeponken.me/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Encryption</title>
+      <link>https://willeponken.me/categories/encryption/</link>
+      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://willeponken.me/categories/encryption/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Gentoo</title>
+      <link>https://willeponken.me/categories/gentoo/</link>
+      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://willeponken.me/categories/gentoo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Os</title>
+      <link>https://willeponken.me/categories/os/</link>
+      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://willeponken.me/categories/os/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
