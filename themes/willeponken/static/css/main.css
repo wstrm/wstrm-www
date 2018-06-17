@@ -1,6 +1,6 @@
 body {
-  background: #3F3F3F;
-  color: #DCDCCC;
+  background: #ffffff
+  color: #555555;
   font-family: serif;
   line-height: 1.4;
 }
@@ -17,16 +17,11 @@ header {
 
 
 h1 {
-  color: #be5be3;
+  color: #333333;
   font-family: sans-serif;
 }
 
 header h1 {
-  -webkit-transform: rotate(-5deg);
-  -moz-transform: rotate(-5deg);
-  -ms-transform: rotate(-5deg);
-  -o-transform: rotate(-5deg);
-  transform: rotate(-5deg);
   margin: 2px;
 }
 
@@ -51,7 +46,7 @@ navbar li {
 }
 
 h2, h3, h4, h5 {
-  color: #30d126;
+  color: #111111;
   font-family: sans-serif;
   margin: 0;
 }
@@ -109,11 +104,11 @@ hr {
 }
 
 a {
-  color: #DCDCCC;
+  color: #555555;
 }
 
 a:hover {
-  color: #CC9393;
+  color: #333333;
 }
 
 .postlist p {

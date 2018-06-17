@@ -1,6 +1,6 @@
 ---
-title: "Gentoo with DM-Crypt LUKS and EFI (Work In Progress)"
-date: "2016-05-21"
+title: "Gentoo with DM-Crypt LUKS and EFI"
+date: "2018-06-16"
 description: "Meta guide to install Gentoo with DM-Crypt LUKS and EFI."
 categories: 
     - "gentoo"
@@ -8,11 +8,11 @@ categories:
     - "encryption"
 ---
 
-This article serves as somekind of meta instruction for installing Gentoo with DM-Crypt LUKS.
+This article serves as somekind of meta instruction for installing Gentoo with DM-Crypt LUKS. It's my preffered setup with a Gentoo with OpenRC and EFI running on an encrypted harddrive.
 
-The guide is heavily based upon *Sakaki's EFI Install Guide*: https://wiki.gentoo.org/wiki/Sakaki%27s_EFI_Install_Guide
+The guide is heavily based upon [Sakaki's EFI Install Guide](https://wiki.gentoo.org/wiki/Sakaki%28s_EFI_Install_Guide).
 
-If this is your first time installing Gentoo it's probably a better idea to follow *Sakaki's EFI Install Guide*, or follow *Gentoo's Handbook*: https:/wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation
+If this is your first time installing Gentoo it's probably a better idea to follow [Sakaki's EFI Install Guide](https://wiki.gentoo.org/wiki/Sakaki%28s_EFI_Install_Guide), or follow the [Gentoo's Handbook](https:/wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation)
 
 ## Burn Minimal Installation CD to USB
 
@@ -469,4 +469,4 @@ emerge -av sys-kernel/dracut
 echo 'GRUB_CMDLINE_LINUX="rd.lvm.vg=main"' >> /etc/default/grub
 ```
 
-TBC
+__TBC__

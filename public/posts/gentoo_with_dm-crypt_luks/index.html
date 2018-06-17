@@ -59,49 +59,18 @@
 
 <p>Either connect a network cable, or connect to a WLAN using:</p>
 
-<pre><code>iwconfig eth0 essid &lt;ssid-of-network&gt;
+<pre><code># Add AP w/ passphrase to config
+wpa_passphrase &quot;ESSID&quot; &gt; /etc/wpa.conf
+&lt;then type your WiFi access point passphrase (without quotes) and press Enter&gt;
 
-# set hex WEP key
-iwconfig eth0 key &lt;hex-key&gt;
-# or use ASCII WEP key
-iwconfig eth0 key s:&lt;ascii-key&gt;
-</code></pre>
+# Fix permissions
+chmod -v 600 /etc/wpa.conf
 
-<h2 id="prepare-usb-key-and-its-filesystem">Prepare USB-key and its filesystem</h2>
+# Check for available WLAN interface
+ip a
 
-<p>Check which USB storage device to use:</p>
-
-<pre><code>lsblk
-</code></pre>
-
-<p>After you have found the USB storage device create a primary partition on it:</p>
-
-<pre><code>parted -a optimal /dev/sdY
-</code></pre>
-
-<p>Then inside parted issue these commands:</p>
-
-<pre><code>(parted) mklabel gpt
-(parted) mkpart primary fat32 0% 100%
-(parted) set 1 BOOT on
-(parted) quit
-</code></pre>
-
-<p>Format the USB storage device to <code>fat32</code>:</p>
-
-<pre><code>mkfs.vfat -F32 /dev/sdY1
-</code></pre>
-
-<p>Temporarily mount the partition:</p>
-
-<pre><code>mkdir /tmp/efiboot
-mount -t vfat /dev/sdY1 /tmp/efiboot
-</code></pre>
-
-<h2 id="create-keyfile-for-luks">Create Keyfile for LUKS</h2>
-
-<pre><code>export GPG_TTY=$(tty)
-dd if=/dev/urandom bs=8388607 count=1 | gpg --symmetric --cipher-algo AES256 --output /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg
+# Connect using WLAN interface
+wpa_supplicant -Dnl80211,wext -i&lt;interface&gt; -c/etc/wpa.conf -B 
 </code></pre>
 
 <h2 id="create-gpt-partition-on-main-storage">Create GPT partition on main storage</h2>
@@ -118,17 +87,16 @@ dd if=/dev/urandom bs=8388607 count=1 | gpg --symmetric --cipher-algo AES256 --o
 
 <p>Inside parted issue:</p>
 
-<pre><code>(parted) unit s
-(parted) print free
-
-...
-
-Number  Start       End         Size        File System   Name          Flags
-        32s         251658206s  251658173s  Free Space
-
-...
-
-(parted) mkpart primary 2048s 100%
+<pre><code>(parted) unit mib
+(parted) mklabel gpt
+(parted) mkpart grub 1 3
+(parted) set 1 bios_grub on
+(parted) mkpart boot fat32 3 515
+(parted) set 2 BOOT on
+(parted) mkpart lvm 515 -1
+(parted) set 3 lvm on
+(parted) print
+(parted) quit
 </code></pre>
 
 <p>Make sure everything is correct:</p>
@@ -136,33 +104,28 @@ Number  Start       End         Size        File System   Name          Flags
 <pre><code>lsblk
 </code></pre>
 
-<p>Overwrite the partition with pseudo-random data:</p>
+<p>Overwrite the partitions with pseudo-random data (if you&rsquo;re paranoid):</p>
 
-<pre><code>dd if=/dev/urandom of=/dev/sdXn bs=1M
+<pre><code>dd if=/dev/urandom of=/dev/sdX{1..3} bs=1M
 </code></pre>
 
 <h2 id="format-main-parition-with-luks">Format main parition with LUKS</h2>
 
-<p>Unlock USB keyfile and let <code>cryptsetup</code> format it as a LUKS partition:</p>
+<p>Let <code>cryptsetup</code> format <code>/dev/sdX3</code> as a LUKS partition:</p>
 
-<pre><code>gpg --decrypt /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg | cryptsetup --key-size 512 --hash sha512 --key-file - luksFormat /dev/sdXn
+<pre><code>cryptsetup --key-size 512 --hash sha512 luksFormat /dev/sdX3
 </code></pre>
 
 <p>Verify everything went well:</p>
 
-<pre><code>cryptsetup luksDump /dev/sdXn
-</code></pre>
-
-<p>Backup the LUKS header to the USB storage device (incase the header is damaged and is needed for restoring data):</p>
-
-<pre><code>cryptsetup luksHeaderBackup /dev/sdXn --header-backup-file /tmp/efiboot/&lt;hostname&gt;-luks-header.img
+<pre><code>cryptsetup luksDump /dev/sdX3
 </code></pre>
 
 <h2 id="setup-lvm-on-main-luks-partition">Setup LVM on main LUKS partition</h2>
 
 <p>Open the LUKS volume:</p>
 
-<pre><code>gpg --decrypt /tmp/efiboot/&lt;hostname&gt;-luks-key.gpg | cryptsetup --key-file - luksOpen /dev/sdXn storage
+<pre><code>cryptsetup luksOpen /dev/sdX3 storage
 </code></pre>
 
 <p>Create LVM physical volume (PV):</p>
@@ -172,7 +135,7 @@ Number  Start       End         Size        File System   Name          Flags
 
 <p>Create LVM volume group (VG):</p>
 
-<pre><code>vgcreate vg1 /dev/mapper/storage
+<pre><code>vgcreate main /dev/mapper/storage
 </code></pre>
 
 <p>Check the size of RAM:</p>
@@ -182,17 +145,12 @@ Number  Start       End         Size        File System   Name          Flags
 
 <p>Create LVM logical volume (LV) for swap:</p>
 
-<pre><code>lvcreate --size &lt;size-of-ram+2&gt;G --name swap vg1
+<pre><code>lvcreate --size &lt;size-of-ram+2&gt;G --name swap main
 </code></pre>
 
 <p>Create LVM logical volume (LV) for root:</p>
 
-<pre><code>lvcreate --size 40G --name root vg1
-</code></pre>
-
-<p>Create LVM logical volume (LV) for home:</p>
-
-<pre><code>lvcreate --extents 95%FREE --name home vg1
+<pre><code>lvcreate --size 100%FREE --name root main
 </code></pre>
 
 <p>Make sure everything is setup correct:</p>
@@ -207,27 +165,27 @@ ls /dev/mapper
 
 <p>Format swap:</p>
 
-<pre><code>mkswap -L &quot;swap&quot; /dev/mapper/vg1-swap
+<pre><code>mkswap -L &quot;swap&quot; /dev/mapper/main-swap
 </code></pre>
 
 <p>Format root:</p>
 
-<pre><code>mkfs.ext4 -L &quot;root&quot; /dev/mapper/vg1-root
+<pre><code>mkfs.ext4 -L &quot;root&quot; /dev/mapper/main-root
 </code></pre>
 
-<p>Format home:</p>
+<p>Format efi/boot:</p>
 
-<pre><code>mkfs.ext4 -m 0 -L &quot;home&quot; /dev/mapper/vg1-home
+<pre><code>mkfs.vfat -F32 /dev/sdX2
 </code></pre>
 
 <p>Activate swap:</p>
 
-<pre><code>swapon /dev/mapper/vg1-swap
+<pre><code>swapon /dev/mapper/main-swap
 </code></pre>
 
 <p>Mount root directory at pre-existing <code>/mnt/gentoo</code> mountpoint:</p>
 
-<pre><code>mount -t ext4 /dev/mapper/vg1-root /mnt/gentoo
+<pre><code>mount -t ext4 /dev/mapper/main-root /mnt/gentoo
 </code></pre>
 
 <p>Create needed directories in root:</p>
@@ -237,17 +195,12 @@ ls /dev/mapper
 
 <p>Mount home directory:</p>
 
-<pre><code>mount -t ext4 /dev/mapper/vg1-home /mnt/gentoo/home
+<pre><code>mount -t ext4 /dev/mapper/main-home /mnt/gentoo/home
 </code></pre>
 
-<p>Unmount USB boot key&rsquo;s EFI partition:</p>
+<p>Take note of the PARTUUID for the main partition:</p>
 
-<pre><code>umount /tmp/efiboot
-</code></pre>
-
-<p>Take note of the PARTUUIDs for the USB storage partition and the main partition:</p>
-
-<pre><code>blkid /dev/sdYn /dev/sdXn
+<pre><code>blkid /dev/sdX3
 </code></pre>
 
 <h2 id="check-date-and-time">Check date and time</h2>
@@ -308,26 +261,17 @@ ls /dev/mapper
 
 <h2 id="setup-portage">Setup Portage</h2>
 
-<p>Edit <code>/mnt/gentoo/root/.bashrc</code>:</p>
+<p>Edit the <code>/mnt/gentoo/etc/portage/make.conf</code> file (modify for your computer):</p>
 
-<pre><code>export NUMCPUS=$(nproc)
-export NUMCPUSPLUSONE=$(( NUMCPUS + 1 ))
-export MAKEOPTS=&quot;-j${NUMCPUSPLUSONE} -l${NUMCPUS}&quot;
-export EMERGE_DEFAULT_OPTS=&quot;--jobs=${NUMCPUSPLUSONE} --load-average=${NUMCPUS}&quot;
-</code></pre>
+<pre><code># The holy USE
+USE=&quot;device-mapper&quot;
 
-<p>Copy the <code>.bash_profile</code> file (make sure <code>VIDEO_CARDS</code> and <code>INPUT_DEVICES</code> are correct):</p>
-
-<pre><code>cp /mnt/gentoo/etc/skel/.bash_profile /mnt/gentoo/root/
-</code></pre>
-
-<p>Edit the <code>/mnt/gentoo/etc/portage/make.conf</code> file:</p>
-
-<pre><code># C and C++ compiler options for GCC.
+# C and C++ compiler options for GCC.
 CFLAGS=&quot;-march=native -O2 -pipe&quot;
 CXXFLAGS=&quot;${CFLAGS}&quot;
-
-# Note: MAKEOPTS and EMERGE_DEFAULT_OPTS are set in .bashrc
+MAKEOPTS=&quot;-j4&quot; # 4 threads per job
+EMERGE_DEFAULT_OPTS=&quot;--jobs 2 --load-average 7.2&quot; # 2 parallel jobs, at 8*0.9 load (90 % load on all cores)
+CPU_FLAGS_X86=&quot;aes avx f16c mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3&quot; # check w/ cpuid2cpuflags
 
 # Only free software, please.
 ACCEPT_LICENSE=&quot;-* @FREE CC-Sampling-Plus-1.0&quot;
@@ -340,7 +284,6 @@ CHOST=&quot;x86_64-pc-linux-gnu&quot;
 ACCEPT_KEYWORDS=&quot;amd64&quot;
 
 # Additional USE flags in addition to those specified by the current profile.
-CPU_FLAGS_X86=&quot;&quot;
 USE=&quot;${CPU_FLAGS_X86}&quot;
 
 # Important Portage directories.
@@ -356,6 +299,9 @@ PORTAGE_ELOG_SYSTEM=&quot;save&quot;
 # Settings for X11 (make sure these are correct for your hardware).
 VIDEO_CARDS=&quot;intel i965&quot;
 INPUT_DEVICES=&quot;evdev synaptics&quot;
+
+# Dracut (initramfs)
+DRACUT_MODULES=&quot;crypt lvm&quot;
 </code></pre>
 
 <h2 id="prepare-and-enter-chroot">Prepare and enter <code>chroot</code></h2>
@@ -369,22 +315,6 @@ INPUT_DEVICES=&quot;evdev synaptics&quot;
 
 <pre><code>mkdir -p /mnt/gentoo/etc/portage/repos.conf
 cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
-</code></pre>
-
-<p>Edit the <code>/mnt/gentoo/etc/portage/repos.conf/gentoo.conf</code> file:</p>
-
-<pre><code>[DEFAULT]
-main-repo = gentoo
-
-[gentoo]
-location = /usr/portage
-sync-type = rsync
-auto-sync = yes
-</code></pre>
-
-<p>Select mirror for <code>sync-uri</code> (rsync server location):</p>
-
-<pre><code>mirrorselect -i -r -o | sed 's/^SYNC=/sync-uri = /;s/&quot;//g' &gt;&gt; /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 </code></pre>
 
 <p>Copy resolv.conf so DNS works in <code>chroot</code>:</p>
@@ -462,10 +392,9 @@ export PS1=&quot;(chroot) $PS1&quot;
 <pre><code>(chroot) emerge --config sys-libs/timezone-data
 </code></pre>
 
-<p>Set the locale by uncommenting the correct ones in <code>/etc/locale.gen</code>:</p>
+<p>Set the locale by uncommenting the correct ones in <code>/etc/locale.gen</code>, in my case:</p>
 
-<pre><code>en_US ISO-8859-1
-en_US.UTF-8 UTF-8
+<pre><code>en_US.UTF-8 UTF-8
 </code></pre>
 
 <p>Generate the new locales:</p>
@@ -495,7 +424,7 @@ en_US.UTF-8 UTF-8
 
 <p>Choose the correct one (strip out<code>.map.gz</code>) and edit <code>/etc/conf.d/keymaps</code>:</p>
 
-<pre><code>keymap=&quot;sv&quot;
+<pre><code>keymap=&quot;sv-latin1&quot;
 </code></pre>
 
 <h2 id="some-minor-fixes-optional">Some minor fixes (optional)</h2>
@@ -503,7 +432,7 @@ en_US.UTF-8 UTF-8
 <p>If you want to use LibreSSL instead of OpenSSL follow the guide here:
 <a href="https://wiki.gentoo.org/wiki/Project:LibreSSL">https://wiki.gentoo.org/wiki/Project:LibreSSL</a></p>
 
-<p>Use directories for package.use, package.mask, etc.:</p>
+<h2 id="create-directories-for-package-use-package-mask-etc">Create directories for package.use, package.mask, etc.:</h2>
 
 <pre><code>(chroot) mkdir -p -v /etc/portage/package.use
 (chroot) touch /etc/portage/package.use/zzz_via_autounmask
@@ -513,6 +442,8 @@ en_US.UTF-8 UTF-8
 (chroot) mkdir -p -v /etc/portage/package.accept_keywords
 (chroot) touch /etc/portage/package.accept_keywords/zzz_via_autounmask
 </code></pre>
+
+<h2 id="finally-make-sure-system-is-up-to-date">Finally, make sure system is up-to-date</h2>
 
 <p>Update <code>@world</code>:</p>
 
@@ -546,184 +477,33 @@ en_US.UTF-8 UTF-8
 (chroot) eselect kernel list
 </code></pre>
 
-<p>Emerge <code>genkernel-next</code> and additional packages:</p>
+<p>Configure the kernel:</p>
 
-<pre><code>(chroot) echo -e &quot;# ensure we can generate a bootable kernel and initramfs\nsys-kernel/genkernel-next cryptsetup gpg&quot; &gt;&gt; /etc/portage/package.use/genkernel-next
-(chroot) emerge --ask --verbose sys-kernel/genkernel-next app-crypt/efitools
+<pre><code>Gentoo Linux &gt; Support for init systems, system and service managers &gt; [*] systemd
+General setup &gt; [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+Enable the block layer &gt; Partition Types &gt; [*]   EFI GUID Partition support
+Processor type and features &gt; [*] EFI runtime service support
+Device Drivers &gt; Generic Driver Options &gt; () path to uevent helper
+Device Drivers &gt; Multiple devices driver support (RAID and LVM) &gt; &lt;*&gt;   Device mapper support &gt; &lt;*&gt;     Crypt target support
+Device Drivers &gt; Multiple devices driver support (RAID and LVM) &gt; &lt;*&gt;   Device mapper support &gt; &lt;*&gt;     Mirror target
+Device Drivers &gt; Graphics support &gt; Support for frame buffer devices &gt; [*]   Enable firmware EDID
+Device Drivers &gt; Graphics support &gt; Support for frame buffer devices &gt; [*]   EFI-based Framebuffer Support
+Device Drivers &gt; Graphics support &gt; Console display driver support &gt; &lt;*&gt; Framebuffer Console support
+Firmware Drivers &gt; EFI (Extensible Firmware Interface)  Support &gt; &lt;*&gt; EFI Variable Support via sysfs
+
 </code></pre>
 
-<p>Setup buildkernel:</p>
+<p>Build and install the kernel:</p>
 
-<pre><code>(chroot) buildkernel --easy-setup
+<pre><code>(chroot) make &amp;&amp; make modules_install &amp;&amp; make install
+
 </code></pre>
 
-<p>Example configuration:</p>
+<p>Prepare for initramfs:</p>
 
-<pre><code>... significant amounts of output suppressed in what follows ...
-* buildkernel: Warning: This system wasn't booted under UEFI, cannot check boot entries
-* Current configuration (from /etc/buildkernel.conf):
-	EFI system partition UUID:  2498f874-ad8f-484e-8aba-81ac1c9665b6
-	LUKS root partition UUID:   8111286a-d24e-4ba2-b6af-d0650fab4130
-	GPG keyfile partition UUID: DEFAULT (=EFI system partition UUID)
-	GPG keyfile (for LUKS):     luks-key.gpg                        
-	EFI boot directory:         /EFI/Boot                           
-	EFI boot file:              bootx64.efi                         
-  Plymouth theme:             NONE (textual boot)                 
-	Boot-time keymap:           us                         
-	Init system:                systemd                             
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 1 then Enter
-* Please choose which EFI system partition to use (or GO BACK):
-	Num Partition UUID                       Path       USB Win Use
-	--- ------------------------------------ ---------- --- --- ---
-	1) 2498f874-ad8f-484e-8aba-81ac1c9665b6 /dev/sdb1   Y  ??? [*]
-	2) f236e16c-ca97-4c36-b0d5-4196fa1e9930 /dev/sda2   N  ??? [ ]
-	3) GO BACK
-	Your choice: selected item is OK so press 3 then Enter
-* Current configuration (from /etc/buildkernel.conf - MODIFIED):
-	... as before ...
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 2 then Enter
-* Please choose which LUKS partition contains the root LVM logical volume:
-	Num Partition UUID                       Path       USB Use
-	--- ------------------------------------ ---------- --- ---
-	1) 8111286a-d24e-4ba2-b6af-d0650fab4130 /dev/sda5   N  [*]
-	2) GO BACK
-	Your choice: selected item is OK so press 2 then Enter
-* Current configuration (from /etc/buildkernel.conf):
-	... as before ...
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 3 then Enter
-* Current LUKS key settings:
-* Using a GPG-encrypted keyfile for LUKS:
-*  KEYFILEPARTUUID unset: assuming GPG keyfile on EFI system partition
-* Please choose your desired LUKS key setting (or GO BACK):
-	1) Use GPG-encrypted keyfile on EFI system partition
-	2) Use GPG-encrypted keyfile on specific USB partition...
-	3) Use fallback passphrase (no keyfile)
-	4) GO BACK
-	Your choice: selected item is OK so press 4 then Enter
-* Current configuration (from /etc/buildkernel.conf):
-	... as before ...
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 4 then Enter
-* Current EFI boot file setting:
-* EFI boot file path: /EFI/Boot/bootx64.efi
-*  (under EFI system partition mountpoint)
-* Please choose your desired EFI boot file setting (or GO BACK):
-	1) Use /EFI/Boot/bootx64.efi (recommended for initial USB install)
-	2) Use /EFI/Microsoft/Boot/bootmgfw.efi (fallback for certain systems)
-	3) Use /EFI/Boot/gentoo.efi (recommended for post-install use)
-	4) GO BACK
-	Your choice: selected item is OK so press 4 then Enter
-* Current configuration (from /etc/buildkernel.conf):
-	... as before ...
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 5 then Enter
-* Current boot splash settings:
-* Using textual boot (no Plymouth)
-* Please choose your desired boot splash setting (or GO BACK):
-	1) Use textual boot (no Plymouth)
-	2) Use Plymouth graphical boot splash ('fade-in')
-	3) GO BACK
-	Your choice: selected item is OK so press 3 then Enter
-* Current configuration (from /etc/buildkernel.conf):
-	... as before ...
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 6 then Enter
-* Please choose your desired boot-time keymap (or GO BACK):
-* Boot-time keymap is currently 'us'
-	1) azerty     9) cz      17) gr       25) mk        33) sg       41) us
-	2) be        10) de      18) hu       26) nl        34) sk-y     42) wangbe
-	3) bg        11) dk      19) il       27) no        35) sk-z     43) sf
-	4) br-a      12) dvorak  20) is       28) pl        36) slovene  44) GO BACK
-	5) br-l      13) es      21) it       29) pt        37) trf
-	6) by        14) et      22) jp       30) ro        38) trq
-	7) cf        15) fi      23) la       31) ru        39) ua
-	8) croat     16) fr      24) lt       32) se        40) uk
-	Your choice: press 32 then Enter
-	NB - select the appropriate keymap for your system!
-* Keymap selected to be 'se'
-* Current configuration (from /etc/buildkernel.conf - MODIFIED):
-	EFI system partition UUID:  2498f874-ad8f-484e-8aba-81ac1c9665b6
-	LUKS root partition UUID:   8111286a-d24e-4ba2-b6af-d0650fab4130
-	GPG keyfile partition UUID: DEFAULT (=EFI system partition UUID)
-	GPG keyfile (for LUKS):     luks-key.gpg                        
-	EFI boot directory:         /EFI/Boot                           
-	EFI boot file:              bootx64.efi                         
-	Plymouth theme:             NONE (textual boot)                 
-	Boot-time keymap:           se                                  
-	Init system:                systemd                             
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 7 then Enter
-* Current init system settings:
-* Targeting systemd init
-* Please choose your desired init system setting (or GO BACK):
-	1) systemd (select if unsure)  3) GO BACK
-	2) OpenRC
-	Your choice: selected item is OK so press 3 then Enter 
-	NB - users wanting to use OpenRC should press 2 then Enter here
-* Current configuration (from /etc/buildkernel.conf):
-	... as before ...
-
-* Please choose an option:
-	1) Set EFI system partition  6) Set boot-time keymap
-	2) Set LUKS root partition   7) Set init system
-	3) Set LUKS key options      8) Exit without saving
-	4) Set EFI boot file path    9) Save and exit
-	5) Set boot splash options
-	Your choice: press 9 then Enter
-* Configuration saved to /etc/buildkernel.conf.
-* Be sure to run buildkernel, to rebuild the kernel with the new
-* settings, before rebooting.
-... significant amounts of output suppressed in the above ...
-</code></pre>
-
-<p>Build the kernel using <code>buildkernel</code>:</p>
-
-<pre><code>(chroot) buildkernel --ask --verbose
+<pre><code>echo &quot;sys-kernel/dracut&quot; &gt;&gt; /etc/portage/package.keywords/dracut
+emerge -av sys-kernel/dracut
+echo 'GRUB_CMDLINE_LINUX=&quot;rd.lvm.vg=main&quot;' &gt;&gt; /etc/default/grub
 </code></pre>
 
 <p>TBC</p>

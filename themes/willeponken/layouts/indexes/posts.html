@@ -4,9 +4,9 @@
   <section>
     <ul>
       {{ range .Data.Pages }}
-      {{ .Render "list" }}
+      {{ .Render "list" . }}
       {{ end }}
     </ul>
   </section>
 </article>
-{{ partial "footer.html" }}
+{{ partial "footer.html" . }}
