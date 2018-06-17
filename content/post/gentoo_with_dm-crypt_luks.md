@@ -32,7 +32,7 @@ wpa_passphrase "ESSID" > /etc/wpa.conf
 <then type your WiFi access point passphrase (without quotes) and press Enter>
 
 # Fix permissions
-chmod -v 600 /etc/wpa.conf
+chmod 600 /etc/wpa.conf
 
 # Check for available WLAN interface
 ip a
@@ -57,12 +57,9 @@ Inside parted issue:
 ```
 (parted) unit mib
 (parted) mklabel gpt
-(parted) mkpart grub 1 3
-(parted) set 1 bios_grub on
-(parted) mkpart boot fat32 3 515
-(parted) set 2 BOOT on
-(parted) mkpart lvm 515 -1
-(parted) set 3 lvm on
+(parted) mkpart boot fat32 1 251
+(parted) set 1 boot on
+(parted) mkpart root 251 -1
 (parted) print
 (parted) quit
 ```
@@ -80,77 +77,32 @@ dd if=/dev/urandom of=/dev/sdX{1..3} bs=1M
 ## Format main parition with LUKS
 Let `cryptsetup` format `/dev/sdX3` as a LUKS partition:
 ```
-cryptsetup --key-size 512 --hash sha512 luksFormat /dev/sdX3
+cryptsetup --key-size 512 --hash sha512 luksFormat /dev/sdX2
 ```
 
 Verify everything went well:
 ```
-cryptsetup luksDump /dev/sdX3
+cryptsetup luksDump /dev/sdX2
 ```
 
-## Setup LVM on main LUKS partition
-Open the LUKS volume:
+Open LUKS partition:
 ```
-cryptsetup luksOpen /dev/sdX3 storage
-```
-
-Create LVM physical volume (PV):
-```
-pvcreate /dev/mapper/storage
-```
-
-Create LVM volume group (VG):
-```
-vgcreate main /dev/mapper/storage
-```
-
-Check the size of RAM:
-```
-grep MemTotal /proc/meminfo
-```
-
-Create LVM logical volume (LV) for swap:
-```
-lvcreate --size <size-of-ram+2>G --name swap main
-```
-
-Create LVM logical volume (LV) for root:
-```
-lvcreate --size 100%FREE --name root main
-```
-
-Make sure everything is setup correct:
-```
-pvdisplay
-vgdisplay
-lvdisplay
-ls /dev/mapper
-```
-
-## Format and mount the logical volumes (LVs):
-Format swap:
-```
-mkswap -L "swap" /dev/mapper/main-swap
+cryptsetup luksOpen /dev/sdX2 root
 ```
 
 Format root:
 ```
-mkfs.ext4 -L "root" /dev/mapper/main-root
+mkfs.ext4 -L "root" /dev/mapper/root
 ```
 
 Format efi/boot:
 ```
-mkfs.vfat -F32 /dev/sdX2
-```
-
-Activate swap:
-```
-swapon /dev/mapper/main-swap
+mkfs.vfat -F32 /dev/sdX1
 ```
 
 Mount root directory at pre-existing `/mnt/gentoo` mountpoint:
 ```
-mount -t ext4 /dev/mapper/main-root /mnt/gentoo
+mount -t ext4 /dev/mapper/root /mnt/gentoo
 ```
 
 Create needed directories in root:
@@ -158,14 +110,9 @@ Create needed directories in root:
 mkdir /mnt/gentoo/{home,boot,boot/efi}
 ```
 
-Mount home directory:
-```
-mount -t ext4 /dev/mapper/main-home /mnt/gentoo/home
-```
-
 Take note of the PARTUUID for the main partition:
 ```
-blkid /dev/sdX3
+blkid /dev/sdX2
 ```
 
 ## Check date and time
@@ -183,14 +130,14 @@ cd /mnt/gentoo
 
 Download the latest Stage 3 files:
 ```
-links http://distfiles.gentoo.org/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
+links http://distfiles.gentoo.org/
 ```
 
 Look for (find the files where YYYYMMDD is the latest date):
 ```
-/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2
-/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.CONTENTS
-/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.bz2.DIGESTS.asc
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.xz
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.xz.CONTENTS
+/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-YYYYMMDD.tar.xz.DIGESTS.asc
 ```
 
 Retrieve the public key:
@@ -210,7 +157,7 @@ awk '/SHA512 HASH/{getline;print}' stage3-amd64-*.DIGESTS.asc | sha512sum -- che
 
 Double check you're in the `/mnt/gentoo` directory, then issue:
 ```
-tar xvjpf stage3-amd64-*.tar.bz2
+tar xvJpf stage3-amd64-*.tar.xz --xattrs-include='*.*' --numeric-owner 
 ```
 
 Remove the Stage 3 files:
@@ -246,25 +193,27 @@ CHOST="x86_64-pc-linux-gnu"
 # Use the 'stable' branch.
 ACCEPT_KEYWORDS="amd64"
 
-# Additional USE flags in addition to those specified by the current profile.
-USE="${CPU_FLAGS_X86}"
-
 # Important Portage directories.
 PORTDIR="/usr/portage"
 DISTDIR="${PORTDIR}/distfiles"
 PKGDIR="${PORTDIR}/packages"
 
+# This sets the language of build output to English.
+# Please keep this setting intact when reporting bugs.
+LC_MESSAGES=C
+
 # Turn on logging - see http://gentoo-en.vfose.ru/wiki/Gentoo_maintenance.
+# Logs go to /var/log/portage/elog by default - view them with elogviewer.
 PORTAGE_ELOG_CLASSES="info warn error log qa"
 PORTAGE_ELOG_SYSTEM="save"
-# Logs go to /var/log/portage/elog by default - view them with elogviewer.
+
+# Ensure elogs saved in category subdirectories.
+# Build binary packages as a byproduct of each emerge, a useful backup.
+FEATURES="split-elog buildpkg"
 
 # Settings for X11 (make sure these are correct for your hardware).
 VIDEO_CARDS="intel i965"
 INPUT_DEVICES="evdev synaptics"
-
-# Dracut (initramfs)
-DRACUT_MODULES="crypt lvm"
 ```
 
 ## Prepare and enter `chroot`
@@ -440,33 +389,136 @@ Make sure `/usr/src/linux` points to current kernel version:
 (chroot) eselect kernel list
 ```
 
-Configure the kernel:
+Configure the kernel (TODO: Missing Crypto for dm-crypt):
 ```
-Gentoo Linux > Support for init systems, system and service managers > [*] systemd
 General setup > [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+General setup > Initial RAM filesystem and RAM disk (initramfs/initrd) support > Initramfs source file(s) (/usr/src/initramfs)
+
 Enable the block layer > Partition Types > [*]   EFI GUID Partition support
+
 Processor type and features > [*] EFI runtime service support
+Processor type and features > EFI runtime service support > <*> EFI stub support
+Processor type and features > [*] Built-in kernel command line (root=/dev/mapper/root)
+
 Device Drivers > Generic Driver Options > () path to uevent helper
 Device Drivers > Multiple devices driver support (RAID and LVM) > <*>   Device mapper support > <*>     Crypt target support
+
 Device Drivers > Multiple devices driver support (RAID and LVM) > <*>   Device mapper support > <*>     Mirror target
 Device Drivers > Graphics support > Support for frame buffer devices > [*]   Enable firmware EDID
 Device Drivers > Graphics support > Support for frame buffer devices > [*]   EFI-based Framebuffer Support
 Device Drivers > Graphics support > Console display driver support > <*> Framebuffer Console support
+
 Firmware Drivers > EFI (Extensible Firmware Interface)  Support > <*> EFI Variable Support via sysfs
 
+Cryptographic API > <*> SHA512 digest algorithm (SSSE3/AVX/AVX2)
+Cryptographic API > <M> XTS support
+Cryptographic API > {M} AES cipher algorithms (x86_64)
+Cryptographic API > <M> AES cipher algorithms (AES-NI)
+Cryptographic API > <M> User-space interface for symmetric key cipher algorithms
+```
+
+Add required USE-flags for initramfs in `/etc/portage/package.use/initramfs`:
+```
+sys-apps/busybox static
+sys-fs/cryptsetup static -gcrypt kernel
+
+# Sadly, we need lvm for cryptsetup to work...
+# required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
+# required by cryptsetup (argument)
+>=dev-libs/libgpg-error-1.29 static-libs
+# required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
+# required by cryptsetup (argument)
+>=sys-apps/util-linux-2.30.2-r1 static-libs
+# required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
+# required by cryptsetup (argument)
+>=sys-fs/lvm2-2.02.145-r2 static-libs
+# required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
+# required by cryptsetup (argument)
+>=dev-libs/popt-1.16-r2 static-libs
+# required by sys-fs/lvm2-2.02.145-r2::gentoo[udev]
+# required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
+# required by cryptsetup (argument)
+>=virtual/libudev-232 static-libs
+# required by virtual/libudev-232::gentoo[-systemd,static-libs]
+# required by sys-fs/lvm2-2.02.145-r2::gentoo[udev]
+# required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
+# required by cryptsetup (argument)
+>=sys-fs/eudev-3.2.5 static-libs
+```
+
+Install `busybox` and `cryptsetup`:
+```
+(chroot) emerge -av sys-fs/cryptsetup sys-apps/busybox
+```
+
+Create initramfs:
+```
+(chroot) mkdir -p /usr/src/initramfs/{bin,dev,etc,lib,lib64,mnt/root,proc,root,sbin,sys,usr/sbin,usr/bin}
+(chroot) cp -a /dev/{null,console,tty,sdX1,sdX2} /usr/src/initramfs/dev/ # Replace X with correct drive number
+(chroot) cp -a /dev/{urandom,random} /usr/src/initramfs/dev
+(chroot) cp -a /sbin/cryptsetup /usr/src/initramfs/sbin/cryptsetup
+(chroot) cp -a /bin/busybox /usr/src/initramfs/bin/busybox
+(chroot) chroot /usr/src/initramfs /bin/busybox --install -s
+```
+
+Create `/usr/src/initramfs/init` with the following content (update to correct drive numbers):
+```
+#!/bin/busybox sh
+
+die() {
+	echo "Something went wrong. Dropping to a shell."
+	exec sh
+}
+
+# Mount the /proc and /sys filesystems.
+mount -t proc none /proc
+mount -t sysfs none /sys
+
+echo "Welcome, dear Sir King Lord William the First..."
+
+# Open encrypted partition, and place at /dev/mapper/root.
+cryptsetup open /dev/sda2 root && root=/dev/mapper/root || die
+
+mount -o ro /dev/mapper/root /mnt/root || die
+
+# Clean up
+umount /proc
+umount /sys
+
+# Switch to real root.
+exec switch_root /mnt/root /sbin/init || die
+```
+
+Make sure we don't compile in an old initramfs:
+```
+(chroot) rm /usr/src/linux/usr/initramfs_data.cpio*
 ```
 
 Build and install the kernel:
 ```
-(chroot) make && make modules_install && make install
+(chroot) make && make modules_install
 
 ```
 
-Prepare for initramfs:
+Manually copy the kernel to the default EFI boot location:
 ```
-echo "sys-kernel/dracut" >> /etc/portage/package.keywords/dracut
-emerge -av sys-kernel/dracut
-echo 'GRUB_CMDLINE_LINUX="rd.lvm.vg=main"' >> /etc/default/grub
+(chroot) mkdir -p /boot/EFI/Boot
+(chroot) cp /usr/src/linux/arch/x86_64/boot/bzImage /boot/EFI/Boot/bootx64.efi
+```
+
+Add `root` filesystem to `/etc/fstab`:
+```
+(chroot) echo "/dev/mapper/root / ext4 defaults,noatime,errors=remount-ro,discard   0 1" >> /etc/fstab
+```
+
+Install some usefull utilities before reboot:
+```
+(chroot) emerge --ask --verbose net-misc/dhcpcd net-wireless/wpa_supplicant app-misc/screen 
+```
+
+Set the root password:
+```
+(chroot) passwd root
 ```
 
 __TBC__
