@@ -8,7 +8,7 @@ categories:
     - "encryption"
 ---
 
-This article serves as somekind of meta instruction for installing Gentoo with DM-Crypt LUKS. It's my preffered setup with a Gentoo with OpenRC and EFI running on an encrypted harddrive.
+This article serves as somekind of meta instruction for installing Gentoo with DM-Crypt LUKS. It's my preferred setup with a Gentoo with OpenRC and EFI running on an encrypted harddrive.
 
 The guide is heavily based upon [Sakaki's EFI Install Guide](https://wiki.gentoo.org/wiki/Sakaki%28s_EFI_Install_Guide).
 
