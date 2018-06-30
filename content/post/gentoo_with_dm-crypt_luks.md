@@ -521,4 +521,13 @@ Set the root password:
 (chroot) passwd root
 ```
 
+Reboot:
+```
+(chroot) reboot # When you lose the connection, press: <Enter>, then '~', then '.'.
+```
+
+
 __TBC__
+```
+app-shells/zsh, app-shells/zsh-completions, app-shells/gentoo-zsh-completions
+```
