@@ -30,6 +30,13 @@ The distributed and encrypted part is even more important today for me as an
 European due to the [_Directive on Copyright in the Digital Single Market_][2]
 (article 11 and 13) that some crazy parties in the EU is trying to pass.
 
+The plan
+========
+[Proposoal for an initial mesh network between some student apartments](initial-mesh-network-topology.jpg)
+
+
+Hardware and drivers
+====================
 Atheros is by far the best option because of their open source drivers and
 stability. The `ath10k` drivers sadly requires [firmware blobs][2], but the
 chipsets supports [IEEE 802.11ac][4] which would offer higher throughput than an

@@ -11,7 +11,7 @@ paginate = 5
 copyright = ""            # default: author.name
 
 [author]                  # essential
-  name = "willeponken"
+  name = "William Wennerström"
 
 [sitemap]                 # essential
   changefreq = "weekly"
@@ -45,15 +45,15 @@ copyright = ""            # default: author.name
 
   since = "2018"            # Site creation time
 
-  # site info (optional)                               
+  # site info (optional)
   logoTitle = "willeponken"        # default: the title value
   keywords = ["william", "wennerström", "programming", "willeponken", "computers"]
   description = "Hugo theme even example site."
 
-  # paginate of archives, tags and categories          
+  # paginate of archives, tags and categories
   archivePaginate = 5
 
-  # show 'xx Posts In Total' in archive page ?        
+  # show 'xx Posts In Total' in archive page ?
   showArchiveCount = false
 
   # The date format to use; for a list of valid formats, see https://gohugo.io/functions/format/
@@ -64,7 +64,7 @@ copyright = ""            # default: author.name
 
   # Some global options, you can also close or open something in front matter for a single post, see more information from `archetypes/default.md`.
   toc = true
-  autoCollapseToc = false   # Auto expand and collapse 
+  autoCollapseToc = false   # Auto expand and collapse
   fancybox = true           # see https://github.com/fancyapps/fancybox
   mathjax = false           # see https://www.mathjax.org/
   mathjaxEnableSingleDollar = false
@@ -132,12 +132,12 @@ copyright = ""            # default: author.name
     sitePV = true
     pagePV = true
 
-  [params.reward]                                         
+  [params.reward]
     enable = false
     wechat = "/path/to/your/wechat-qr-code.png"
     alipay = "/path/to/your/alipay-qr-code.png"
 
-  [params.social]                             
+  [params.social]
     a-email = "mailto:william@willeponken.me"
     e-linkedin = "https://se.linkedin.com/in/william-wennerstr%C3%B6m-98b0a8b3"
     g-github = "https://github.com/willeponken"
