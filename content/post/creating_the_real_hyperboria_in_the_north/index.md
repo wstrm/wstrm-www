@@ -12,7 +12,7 @@ categories:
     - "encryption"
 ---
 
-![This is not the Hyperboria I'm talking about](hyperboria-map-with-me-v2.png)
+![This is not the Hyperboria I'm talking about](hyperboria-map-with-me-v3.png)
 
 Luleå, Sweden, is actually not that far away from Hyperborea.
 
