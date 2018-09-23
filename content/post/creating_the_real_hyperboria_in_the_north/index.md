@@ -12,7 +12,7 @@ categories:
     - "encryption"
 ---
 
-![This is not the Hyperboria I'm talking about](hyperboria-map.png)
+![This is not the Hyperboria I'm talking about](hyperboria-map-with-me.png)
 
 _Note: I'm actually talking about the Cjdns mesh network, Hyperboria, not any
 [mythical utopia][0]._
