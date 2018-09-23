@@ -1,19 +1,31 @@
-Creating the _real_ [Hyperboria][0] in the North
-================================================
+---
+title: "Creating the real Hyperboria in the North"
+date: "2018-09-23"
+categories:
+    - "mesh"
+    - "network"
+    - "hyperboria"
+    - "cjdns"
+    - "batman-adv"
+    - "wifi"
+    - "wireless"
+    - "encryption"
+---
 _Note: I'm actually talking about the Cjdns mesh network, Hyperboria, not any
-mythical utopia._
+[mythical utopia][0]._
 
 I've been thinking of running a mesh network since ~4 years ago when I and a
 classmate had a [school project][1] where we tried to make an Cjdns network that
 was easy to join for everyone using a user friendly captive portal.
 
 So, now I'm at it again, and forcing some friends to participate in a
-IBSS + B.A.T.M.A.N + Cjdns _or_ 802.11s + Cjdns network. I'm still unsure of the
-stack and looking into alternatives. The goal I had with the old school project
-was a distributed and encrypted mesh network for everyone. The distributed and
-encrypted part is even more important today for me as an European due to the
-[_Directive on Copyright in the Digital Single Market_][2] (article 11 and 13)
-that some crazy parties in the EU is trying to pass.
+IBSS + B.A.T.M.A.N Advanced + Cjdns _or_ 802.11s + Cjdns network.
+I'm still unsure of the stack and looking into alternatives.
+The goal I had with the old school project was a distributed and encrypted mesh
+network for everyone.
+The distributed and encrypted part is even more important today for me as an
+European due to the [_Directive on Copyright in the Digital Single Market_][2]
+(article 11 and 13) that some crazy parties in the EU is trying to pass.
 
 Atheros is by far the best option because of their open source drivers and
 stability. The `ath10k` drivers sadly requires [firmware blobs][2], but the
