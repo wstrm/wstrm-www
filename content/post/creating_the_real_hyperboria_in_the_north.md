@@ -14,6 +14,9 @@ categories:
 _Note: I'm actually talking about the Cjdns mesh network, Hyperboria, not any
 [mythical utopia][0]._
 
+Background
+==========
+
 I've been thinking of running a mesh network since ~4 years ago when I and a
 classmate had a [school project][1] where we tried to make an Cjdns network that
 was easy to join for everyone using a user friendly captive portal.
@@ -50,7 +53,7 @@ way, where Realtek is the worst offender. Intel atleast works, but I get driver
 So let's look into some of the Atheros drivers that are interesting.
 
 Drivers overview
-=================
+================
 ## Sources
  * Linux Wireless (https://wireless.wiki.kernel.org/en/users/Drivers)
  * WikiDevi (https://wikidevi.com/wiki/Atheros)
