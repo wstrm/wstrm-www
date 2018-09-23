@@ -11,8 +11,12 @@ categories:
     - "wireless"
     - "encryption"
 ---
+
+![This is not the Hyperboria I'm talking about](hyperboria-mercator-septentrionalium-terrarum.jpg)
+
 _Note: I'm actually talking about the Cjdns mesh network, Hyperboria, not any
 [mythical utopia][0]._
+
 
 Background
 ==========
@@ -34,18 +38,20 @@ Intial mesh topology and plan
 =============================
 Below is an initial plan for a small mesh network between some student
 apartments.
+
 ![Proposoal for an initial mesh network between some student apartments](initial-mesh-network-topology.jpg)
+
 The plan is to start with a test between `Node 0` and `Node 1`, where we test
 the throughput and stability of different potential stacks. The other nodes, 2
 to 5, will be added one at a time, continuing with the tests (and maybe we'll
 come up with new tests). Lastly, there is a `Node 6`, which is a potential link
 that could be aimed towards the university. With this link we could get near 1
-Gbit/s with the right hardware to the Internet. There is also 40 Gbit/s links to
-the university that _could_ be connected (wishful thinking).
+Gbit/s (with the right hardware) to the Internet. There is also 40 Gbit/s links
+to the university that _could_ be connected (wishful thinking).
 
 If we are able to get above 100 Mbit/s speeds and good enough latency the
 network could even replace the local ISP's - creating a student ISP that all
-students can freely connect to as long as they have the correct hardware.
+students can freely connect to as long as they have the right hardware.
 
 Hardware and drivers
 ====================
