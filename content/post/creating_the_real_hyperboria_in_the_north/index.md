@@ -16,7 +16,6 @@ categories:
 _Note: I'm actually talking about the Cjdns mesh network, Hyperboria, not any
 [mythical utopia][0]._
 
-
 Background
 ==========
 
@@ -31,7 +30,7 @@ The goal I had with the old school project was a distributed and encrypted mesh
 network for everyone.
 The distributed and encrypted part is even more important today for me as an
 European due to the [_Directive on Copyright in the Digital Single Market_][2]
-(article 11 and 13) that some crazy parties in the EU is trying to pass.
+(article 11 and 13) that some [crazy parties][8] in the EU is trying to pass.
 
 Intial mesh topology and plan
 =============================
@@ -73,6 +72,7 @@ way, where Realtek is the worst offender. Intel atleast works, but I get driver
 [5]: https://en.wikipedia.org/wiki/IEEE_802.11 (IEEE 802.11 standard collection)
 [6]: https://wireless.wiki.kernel.org/en/developers/gsoc/2012/ath9k_htc_open_firmware (Linux Wireless: ath9k_htc)
 [7]: https://github.com/lwfinger/rtl8188eu/issues/4 (GitHub.com/lwfinger/rtl8188eu: ad-hoc mode issue)
+[8]: https://juliareda.eu/2018/09/ep-endorses-upload-filters/ (Julia Reda: European Parliament endorses upload filters and "link tax")
 
 So let's look into some of the Atheros drivers that are interesting.
 
