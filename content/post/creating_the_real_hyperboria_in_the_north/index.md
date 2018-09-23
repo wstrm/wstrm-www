@@ -13,6 +13,7 @@ categories:
 ---
 
 ![This is not the Hyperboria I'm talking about](hyperboria-map-with-me-v2.png)
+
 Luleå, Sweden, is actually not that far away from Hyperborea.
 
 _Note: I'm actually talking about the Cjdns mesh network, Hyperboria, not any
