@@ -30,13 +30,13 @@ European due to the [_Directive on Copyright in the Digital Single Market_][2]
 Atheros is by far the best option because of their open source drivers and
 stability. The `ath10k` drivers sadly requires [firmware blobs][2], but the
 chipsets supports [IEEE 802.11ac][4] which would offer higher throughput than an
-ath9k and ath9k_htc supported [IEEE 802.11a/b/g/n][5] chipset. And maybe the
+`ath9k` and `ath9k_htc` supported [IEEE 802.11a/b/g/n][5] chipset. And maybe the
 firmware blob will be liberated in the future [as the ath9k_htc firmware blobs][6]?
 
 Why am I so biased towards the Atheros chipsets? I've had experience with both
-the Intel and Realtek chipsets, and there's _always_[7] a bug that gets in the
+the Intel and Realtek chipsets, and there's [_always_][7] a bug that gets in the
 way, where Realtek is the worst offender. Intel atleast works, but I get driver
-(iwlwifi) crashes when running in Ad-Hoc mode sometimes (during association).
+(`iwlwifi`) crashes when running in Ad-Hoc mode sometimes (during association).
 
 [0]: https://en.wikipedia.org/wiki/Hyperborea (Wikipedia: Hyperborea)
 [1]: https://github.com/Meshleholm (School project)
@@ -49,13 +49,13 @@ way, where Realtek is the worst offender. Intel atleast works, but I get driver
 
 So let's look into some of the Atheros drivers that are interesting.
 
-Drivers overview:
+Drivers overview
 =================
-## Sources:
+## Sources
  * Linux Wireless (https://wireless.wiki.kernel.org/en/users/Drivers)
  * WikiDevi (https://wikidevi.com/wiki/Atheros)
 
-## ath9k:
+## ath9k
  * Completely FOSS, no blobs
  * Both PCI/PCIe and AHB WLAN
  * Driver framework: mac80211
@@ -124,7 +124,7 @@ Drivers overview:
  * Problems:
     - Tracker: http://bugzilla.kernel.org/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=&content=ath9k
 
-## ath9k_htc:
+## ath9k_htc
  * Free driver, liberated firmware, no blobs
  * Supported chipsets:
 	- AR9271 and AR7010 USB-PCIe bridge with AR928x wireless chips
@@ -149,7 +149,7 @@ Drivers overview:
 	- AP mode limitation of 7 stations
 	- Experimental AP/P2P
 
-## ath10K:
+## ath10K
  * Free driver but requires non-free firmware blob
    (https://wireless.wiki.kernel.org/en/users/drivers/ath10k/firmware)
  * Driver framework: mac80211
