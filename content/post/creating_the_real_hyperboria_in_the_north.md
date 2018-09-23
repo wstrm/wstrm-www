@@ -56,119 +56,119 @@ Drivers overview:
  * WikiDevi (https://wikidevi.com/wiki/Atheros)
 
 ## ath9k:
-	* Completely FOSS, no blobs
-	* Both PCI/PCIe and AHB WLAN
-	* Driver framework: mac80211
-	* MAC architecture: SoftMAC
-	* Supported chipsets:
-		- AR2427 1×1 SB (no 11n)
-		- AR5008:
-			* AR5418+AR5133
-			* AR5416+AR5133
-			* AR5416+AR2133
-		- AR9001:
-			* AR9160 2×2 DB
-			* AR9102 2×2 SB
-			* AR9103 3×3 SB
-		- AR9002:
-			* AR9220 2×2 DB
-			* AR9223 2×2 SB
-			* AR9227 2×2 SB
-			* AR9280 2×2 DB
-			* AR9281 2×2 SB
-			* AR9285 1×1 SB
-			* AR9287 2×2 SB
-		- AR9003:
-			* AR9380 3×3 DB
-			* AR9382 2×2 DB
-			* AR9331 1×1 SB
-			* AR9340 2×2 DB
-		- AR9004:
-			 * AR9485 1×1 SB
-			 * AR9462 2×2 DB
-			 * AR9565 1×1 SB
-			 * AR9580 3×3 DB
-			 * AR9550 3×3 DB
-	* Modes of operation:
-		- Station
-		- AP
-		- IBSS
-		- Monitor
-		- Mesh point
-		- WDS
-		- P2P GO/CLIENT
-	* Features:
-		- 802.11abg
-		- 802.11n
-		- HT20
-		- HT40
-		- AMPDU
-		- Short GI (Both 20 and 40 MHz)
-		- LDPC
-		- TX/RX STBC
-		- 802.11i
-		- WEP 64 / 127
-		- WPA1 / WPA2
-		- 802.11d
-		- 802.11h
-		- 802.11w/D7.0
-		- WPS
-		- WMM
-		- LED
-		- RFKILL
-		- BT co-existence
-		- AHB and PCI bus
-		- TDLS
-		- WoW
-		- Antenna Diversity
-	* Problems:
-		- Tracker: http://bugzilla.kernel.org/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=&content=ath9k
+ * Completely FOSS, no blobs
+ * Both PCI/PCIe and AHB WLAN
+ * Driver framework: mac80211
+ * MAC architecture: SoftMAC
+ * Supported chipsets:
+    - AR2427 1×1 SB (no 11n)
+    - AR5008:
+	* AR5418+AR5133
+	* AR5416+AR5133
+	* AR5416+AR2133
+    - AR9001:
+	* AR9160 2×2 DB
+	* AR9102 2×2 SB
+	* AR9103 3×3 SB
+    - AR9002:
+	* AR9220 2×2 DB
+	* AR9223 2×2 SB
+	* AR9227 2×2 SB
+	* AR9280 2×2 DB
+	* AR9281 2×2 SB
+	* AR9285 1×1 SB
+	* AR9287 2×2 SB
+    - AR9003:
+	* AR9380 3×3 DB
+	* AR9382 2×2 DB
+	* AR9331 1×1 SB
+	* AR9340 2×2 DB
+    - AR9004:
+	* AR9485 1×1 SB
+	* AR9462 2×2 DB
+	* AR9565 1×1 SB
+	* AR9580 3×3 DB
+	* AR9550 3×3 DB
+ * Modes of operation:
+    - Station
+    - AP
+    - IBSS
+    - Monitor
+    - Mesh point
+    - WDS
+    - P2P GO/CLIENT
+ * Features:
+    - 802.11abg
+    - 802.11n
+    - HT20
+    - HT40
+    - AMPDU
+    - Short GI (Both 20 and 40 MHz)
+    - LDPC
+    - TX/RX STBC
+    - 802.11i
+    - WEP 64 / 127
+    - WPA1 / WPA2
+    - 802.11d
+    - 802.11h
+    - 802.11w/D7.0
+    - WPS
+    - WMM
+    - LED
+    - RFKILL
+    - BT co-existence
+    - AHB and PCI bus
+    - TDLS
+    - WoW
+    - Antenna Diversity
+ * Problems:
+    - Tracker: http://bugzilla.kernel.org/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=&content=ath9k
 
 ## ath9k_htc:
-	* Free driver, liberated firmware, no blobs
-	* Supported chipsets:
-		- AR9271 and AR7010 USB-PCIe bridge with AR928x wireless chips
-	* Supported devices:
-		- https://wireless.wiki.kernel.org/en/users/drivers/ath9k_htc/devices
-	* Driver framework: mac80211
-	* MAC architecture: SoftMAC
-	* Modes of operation and features:
-		- Station Mode
-		- Monitor Mode
-		- AP Mode (note: AP mode works only with up to 7 stations due to a firmware limitation)
-		- IBSS Mode
-		- Mesh Mode
-		- Legacy (11g) operation
-		- HT support
-		- TX/RX 11n AMPDU aggregation
-		- HW Encryption
-		- LED
-		- Suspend/Resume
-	* Problems:
-		- Somewhat young hardware/drivers
-		- AP mode limitation of 7 stations
-		- Experimental AP/P2P
+ * Free driver, liberated firmware, no blobs
+ * Supported chipsets:
+	- AR9271 and AR7010 USB-PCIe bridge with AR928x wireless chips
+ * Supported devices:
+	- https://wireless.wiki.kernel.org/en/users/drivers/ath9k_htc/devices
+ * Driver framework: mac80211
+ * MAC architecture: SoftMAC
+ * Modes of operation and features:
+	- Station Mode
+	- Monitor Mode
+	- AP Mode (note: AP mode works only with up to 7 stations due to a firmware limitation)
+	- IBSS Mode
+	- Mesh Mode
+	- Legacy (11g) operation
+	- HT support
+	- TX/RX 11n AMPDU aggregation
+	- HW Encryption
+	- LED
+	- Suspend/Resume
+ * Problems:
+	- Somewhat young hardware/drivers
+	- AP mode limitation of 7 stations
+	- Experimental AP/P2P
 
 ## ath10K:
-	* Free driver but requires non-free firmware blob
-	  (https://wireless.wiki.kernel.org/en/users/drivers/ath10k/firmware)
-	* Driver framework: mac80211
-	* MAC architecture: SoftMAC
-	* Supported chipsets:
-		- QCA6164, QCA6164A, QCA6174, QCA6174A, QCA9377, QCA9880,
-		- QCA9882, QCA9887, QCA9890, QCA9892 and QCA9980
-	* Supported devices:
-		- http://wireless.kernel.org/en/users/Drivers/ath10k
-	* Modes of operation and features:
-		- Station Mode
-		- IBSS Mode (partial)
-		- AP Mode
-		- Mesh Mode (partial)
-		- Monitor Mode (partial, firmware dependant)
-		- Packet injection (partial, firmware dependant)
-	* Problems:
-		- Firmware does not support association to the same AP from different virtual STA interfaces (driver prints "ath10k: Failed to add peer XX:XX:XX:XX:XX:XX for VDEV: X" in that case)
-		- Packet injection isn't supported yet, applying ath9k regulatory domain hack patch from OpenWRT causes firmware crash (reason: regulatory hint function is never called and ath10k never sends scan channel list to the firmware which in turn causes firmware to crash on scan)
-		- Tx rate is reported as 6mbps due to firmware limitation (no tx rate information in tx completions); instead see /sys/kernel/debug/ieee80211/phyX/ath10k/fw_stats
-		- Ath10k does NOT support older QCA98xx hw1.0 chips
-		- Some of Compex WLE900VX fail to enumerate as PCI device, probably for an electric issue
+ * Free driver but requires non-free firmware blob
+   (https://wireless.wiki.kernel.org/en/users/drivers/ath10k/firmware)
+ * Driver framework: mac80211
+ * MAC architecture: SoftMAC
+ * Supported chipsets:
+	- QCA6164, QCA6164A, QCA6174, QCA6174A, QCA9377, QCA9880,
+	- QCA9882, QCA9887, QCA9890, QCA9892 and QCA9980
+ * Supported devices:
+	- http://wireless.kernel.org/en/users/Drivers/ath10k
+ * Modes of operation and features:
+	- Station Mode
+	- IBSS Mode (partial)
+	- AP Mode
+	- Mesh Mode (partial)
+	- Monitor Mode (partial, firmware dependant)
+	- Packet injection (partial, firmware dependant)
+ * Problems:
+	- Firmware does not support association to the same AP from different virtual STA interfaces (driver prints "ath10k: Failed to add peer XX:XX:XX:XX:XX:XX for VDEV: X" in that case)
+	- Packet injection isn't supported yet, applying ath9k regulatory domain hack patch from OpenWRT causes firmware crash (reason: regulatory hint function is never called and ath10k never sends scan channel list to the firmware which in turn causes firmware to crash on scan)
+	- Tx rate is reported as 6mbps due to firmware limitation (no tx rate information in tx completions); instead see /sys/kernel/debug/ieee80211/phyX/ath10k/fw_stats
+	- Ath10k does NOT support older QCA98xx hw1.0 chips
+	- Some of Compex WLE900VX fail to enumerate as PCI device, probably for an electric issue
