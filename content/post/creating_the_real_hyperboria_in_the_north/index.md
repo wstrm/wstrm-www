@@ -30,10 +30,22 @@ The distributed and encrypted part is even more important today for me as an
 European due to the [_Directive on Copyright in the Digital Single Market_][2]
 (article 11 and 13) that some crazy parties in the EU is trying to pass.
 
-The plan
-========
-[Proposoal for an initial mesh network between some student apartments](initial-mesh-network-topology.jpg)
+Intial mesh topology and plan
+=============================
+Below is an initial plan for a small mesh network between some student
+apartments.
+![Proposoal for an initial mesh network between some student apartments](initial-mesh-network-topology.jpg)
+The plan is to start with a test between `Node 0` and `Node 1`, where we test
+the throughput and stability of different potential stacks. The other nodes, 2
+to 5, will be added one at a time, continuing with the tests (and maybe we'll
+come up with new tests). Lastly, there is a `Node 6`, which is a potential link
+that could be aimed towards the university. With this link we could get near 1
+Gbit/s with the right hardware to the Internet. There is also 40 Gbit/s links to
+the university that _could_ be connected (wishful thinking).
 
+If we are able to get above 100 Mbit/s speeds and good enough latency the
+network could even replace the local ISP's - creating a student ISP that all
+students can freely connect to as long as they have the correct hardware.
 
 Hardware and drivers
 ====================
