@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<style>
+body {
+  background-color: black;
+}
+#box {
+  height: 100px;
+  margin: 0;
+  padding: 0;
+}
+#countdown {
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 60px;
+  color: magenta;
+}
+#bottom {
+  margin-top: 550px;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  font-size: 60px;
+  color: #98ff98;
+}
+img {
+  width: 700px;
+  border-style: dotted;
+  border-color: red;
+  border-width: 15px;
+  position: absolute;
+  left: 50%;
+  margin: 0 0 0 -350px;
+}
+</style>
+</head>
+<body>
+
+<div id="box">
+  <div id="countdown"></div>
+</div>
+<img src="./middagsinbjudan.png" />
+<p id="bottom">Efter middagen får ni para ihop bilden med rätterna! 😜</p>
+
+<script>
+var eathaja = 10 + 2 + 1 - 27 + 10 + 0 + 30 - 10 + 2; // Lista ut denna om ni kan ;)
+var countDownDate = new Date("Nov 17, 2018 "+eathaja+":00:00").getTime();
+
+function pad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+function blahblahblah() {
+  var now = new Date().getTime();
+  var distance = countDownDate - now;
+  var days = pad(Math.floor(distance / (1000 * 60 * 60 * 24)), 2);
+  var hours = pad(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), 2);
+  var minutes = pad(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)), 2);
+  var seconds = pad(Math.floor((distance % (1000 * 60)) / 1000), 2);
+
+  var countdown = "";
+  if (days > 0) {
+    countdown += days + ":";
+  }
+  if (hours > 0) {
+    countdown += hours + ":";
+  }
+  countdown += minutes + ":";
+  countdown += seconds;
+
+  document.getElementById("countdown").innerHTML = countdown;
+
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "Vad väntar du på?! Kom över till Docentvägen 20 LGH 1001 NU!";
+  }
+}
+
+var x = setInterval(blahblahblah, 1000);
+blahblahblah();
+
+</script>
+
+</body>
+</html>
