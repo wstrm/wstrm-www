@@ -1,8 +1,9 @@
 ---
 title: "Gentoo with DM-Crypt LUKS and EFI"
 date: "2018-06-16"
+lastmod: "2019-02-24"
 description: "Meta guide to install Gentoo with DM-Crypt LUKS and EFI."
-categories: 
+categories:
     - "gentoo"
     - "os"
     - "encryption"
@@ -38,7 +39,7 @@ chmod 600 /etc/wpa.conf
 ip a
 
 # Connect using WLAN interface
-wpa_supplicant -Dnl80211,wext -i<interface> -c/etc/wpa.conf -B 
+wpa_supplicant -Dnl80211,wext -i<interface> -c/etc/wpa.conf -B
 ```
 
 ## Create GPT partition on main storage
@@ -110,11 +111,6 @@ Create needed directories in root:
 mkdir /mnt/gentoo/{home,boot,boot/efi}
 ```
 
-Take note of the PARTUUID for the main partition:
-```
-blkid /dev/sdX2
-```
-
 ## Check date and time
 Make sure the time is correct:
 ```
@@ -157,7 +153,7 @@ awk '/SHA512 HASH/{getline;print}' stage3-amd64-*.DIGESTS.asc | sha512sum -- che
 
 Double check you're in the `/mnt/gentoo` directory, then issue:
 ```
-tar xvJpf stage3-amd64-*.tar.xz --xattrs-include='*.*' --numeric-owner 
+tar xvJpf stage3-amd64-*.tar.xz --xattrs-include='*.*' --numeric-owner
 ```
 
 Remove the Stage 3 files:
@@ -389,6 +385,13 @@ Make sure `/usr/src/linux` points to current kernel version:
 (chroot) eselect kernel list
 ```
 
+Move to the `/usr/src/linux` directory, and run `make menuconfig` to configure
+the kernel:
+```
+(chroot) cd /usr/src/linux
+(chroot) make menuconfig
+```
+
 Configure the kernel (TODO: Missing Crypto for dm-crypt):
 ```
 General setup > [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
@@ -400,6 +403,7 @@ Processor type and features > [*] EFI runtime service support
 Processor type and features > EFI runtime service support > <*> EFI stub support
 Processor type and features > [*] Built-in kernel command line (root=/dev/mapper/root)
 
+Device Drivers > Generic Driver Options > [] Support for uevent helper
 Device Drivers > Generic Driver Options > () path to uevent helper
 Device Drivers > Multiple devices driver support (RAID and LVM) > <*>   Device mapper support > <*>     Crypt target support
 
@@ -408,13 +412,20 @@ Device Drivers > Graphics support > Support for frame buffer devices > [*]   Ena
 Device Drivers > Graphics support > Support for frame buffer devices > [*]   EFI-based Framebuffer Support
 Device Drivers > Graphics support > Console display driver support > <*> Framebuffer Console support
 
+# You probably want USB 3.0 on most modern systems.
+Device Drivers > USB support > <*> xHCI HCD (USB 3.0) support
+
 Firmware Drivers > EFI (Extensible Firmware Interface)  Support > <*> EFI Variable Support via sysfs
 
 Cryptographic API > <*> SHA512 digest algorithm (SSSE3/AVX/AVX2)
-Cryptographic API > <M> XTS support
-Cryptographic API > {M} AES cipher algorithms (x86_64)
-Cryptographic API > <M> AES cipher algorithms (AES-NI)
-Cryptographic API > <M> User-space interface for symmetric key cipher algorithms
+Cryptographic API > <*> XTS support
+Cryptographic API > <*> AES cipher algorithms (x86_64)
+
+# Enable this if you're using any x86_64 Intel CPU
+Cryptographic API > <*> AES cipher algorithms (AES-NI)
+
+Cryptographic API > <*> User-space interface for hash algorithms
+Cryptographic API > <*> User-space interface for symmetric key cipher algorithms
 ```
 
 Add required USE-flags for initramfs in `/etc/portage/package.use/initramfs`:
@@ -454,14 +465,14 @@ Install `busybox` and `cryptsetup`:
 Create initramfs:
 ```
 (chroot) mkdir -p /usr/src/initramfs/{bin,dev,etc,lib,lib64,mnt/root,proc,root,sbin,sys,usr/sbin,usr/bin}
-(chroot) cp -a /dev/{null,console,tty,sdX1,sdX2} /usr/src/initramfs/dev/ # Replace X with correct drive number
+(chroot) cp -a /dev/{null,console,tty,sdX1,sdX2} /usr/src/initramfs/dev/ # Replace X with correct drive letter.
 (chroot) cp -a /dev/{urandom,random} /usr/src/initramfs/dev
 (chroot) cp -a /sbin/cryptsetup /usr/src/initramfs/sbin/cryptsetup
 (chroot) cp -a /bin/busybox /usr/src/initramfs/bin/busybox
 (chroot) chroot /usr/src/initramfs /bin/busybox --install -s
 ```
 
-Create `/usr/src/initramfs/init` with the following content (update to correct drive numbers):
+Create `/usr/src/initramfs/init` with the following content (NOTE: update to correct drive letters):
 ```
 #!/bin/busybox sh
 
@@ -477,7 +488,8 @@ mount -t sysfs none /sys
 echo "Welcome, dear Sir King Lord William the First..."
 
 # Open encrypted partition, and place at /dev/mapper/root.
-cryptsetup open /dev/sda2 root && root=/dev/mapper/root || die
+# NOTE: Update drive letter below.
+cryptsetup open /dev/sdX2 root && root=/dev/mapper/root || die
 
 mount -o ro /dev/mapper/root /mnt/root || die
 
@@ -489,6 +501,11 @@ umount /sys
 exec switch_root /mnt/root /sbin/init || die
 ```
 
+# Make `init` executable:
+```
+(chroot) chmod +x /usr/src/initramfs/init
+```
+
 Make sure we don't compile in an old initramfs:
 ```
 (chroot) rm /usr/src/linux/usr/initramfs_data.cpio*
@@ -497,7 +514,11 @@ Make sure we don't compile in an old initramfs:
 Build and install the kernel:
 ```
 (chroot) make && make modules_install
+```
 
+Mount the boot partition (NOTE: Update drive letter):
+```
+(chroot) mount /dev/sdX1 /boot
 ```
 
 Manually copy the kernel to the default EFI boot location:
@@ -513,7 +534,8 @@ Add `root` filesystem to `/etc/fstab`:
 
 Install some usefull utilities before reboot:
 ```
-(chroot) emerge --ask --verbose net-misc/dhcpcd net-wireless/wpa_supplicant app-misc/screen 
+(chroot) emerge -a net-misc/dhcpcd app-misc/screen
+(chroot) emerge -a net-wireless/wpa_supplicant # If you use WiFi.
 ```
 
 Set the root password:
@@ -521,13 +543,166 @@ Set the root password:
 (chroot) passwd root
 ```
 
+Set the hostname:
+```
+(chroot) echo -n "myWonderfulComputer" > /etc/hostname
+```
+
 Reboot:
 ```
-(chroot) reboot # When you lose the connection, press: <Enter>, then '~', then '.'.
+(chroot) exit
+reboot # When you lose the connection, press: <Enter>, then '~', then '.'.
 ```
 
-
-__TBC__
+## What if something went wrong?!
+If the something goes wrong during boot, boot using the USB with the minimal
+install and enter the `chroot` again with:
 ```
-app-shells/zsh, app-shells/zsh-completions, app-shells/gentoo-zsh-completions
+cryptsetup luksOpen /dev/sdX2 root
+mount -t ext4 /dev/mapper/root /mnt/gentoo
+mount -t proc none /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/dev
+chroot /mnt/gentoo /bin/bash
+source /etc/profile
+export PS1="(chroot) $PS1"
+```
+
+## Add user
+Now, when you've succesfully booted into your new system, login as root and
+create a new user that can use `sudo`:
+```
+emerge -a app-admin/sudo
+useradd -m -G users,wheel,audio,video -s /bin/bash willeponken # Change to your username.
+passwd willeponken # You'll get prompted to set the users password.
+```
+
+Enter `visudo` and uncomment the `# %wheel ALL=(ALL) NOPASSWD: ALL` block:
+```
+visudo # Uncomment the block, and save and exit.
+```
+
+Below you have my favorites, it contains a X11 environment running `dwm`. Add it
+to `/etc/portage/sets/favorites`:
+```
+app-admin/pass
+app-admin/stow
+app-admin/sudo
+app-arch/rar
+app-arch/unrar
+app-arch/unzip
+app-arch/zip
+app-backup/restic
+app-editors/neovim
+app-eselect/eselect-repository
+app-eselect/eselect-vi
+app-misc/screen
+app-portage/cpuid2cpuflags
+app-portage/eix
+app-portage/elogv
+app-portage/gentoolkit
+app-portage/layman
+app-portage/repoman
+app-shells/gentoo-zsh-completions
+app-shells/zsh
+app-shells/zsh-completions
+app-text/antiword
+app-text/extract_url
+app-text/mupdf
+app-text/poppler
+app-text/tree
+app-vim/gentoo-syntax
+dev-lang/go
+dev-python/pip
+dev-python/virtualenv
+dev-util/ctags
+dev-util/strace
+dev-vcs/git
+dev-vcs/git-lfs
+mail-client/mutt
+mail-mta/msmtp
+media-fonts/powerline-symbols
+media-gfx/feh
+media-gfx/gimp
+media-gfx/graphviz
+media-gfx/scrot
+media-libs/exiftool
+media-libs/imlib2
+media-sound/alsa-utils
+media-video/ffmpeg
+media-video/mpv
+net-analyzer/nethogs
+net-analyzer/openbsd-netcat
+net-analyzer/tcpdump
+net-analyzer/traceroute
+net-dns/bind-tools
+net-dns/openresolv
+net-misc/chrony
+net-misc/dhcpcd
+net-misc/mosh
+net-misc/youtube-dl
+net-vpn/openvpn
+sys-apps/exa
+sys-apps/haveged
+sys-apps/hprofile
+sys-apps/mlocate
+sys-apps/pciutils
+sys-apps/ripgrep
+sys-devel/gcc
+sys-fs/cryptsetup
+sys-fs/ncdu
+sys-kernel/gentoo-sources
+sys-kernel/linux-firmware
+sys-power/suspend
+sys-process/cronie
+sys-process/htop
+www-client/firefox
+www-client/lynx
+www-client/surf
+x11-apps/setxkbmap
+x11-apps/xbacklight
+x11-apps/xev
+x11-apps/xfd
+x11-apps/xhost
+x11-apps/xlsfonts
+x11-apps/xmodmap
+x11-apps/xrandr
+x11-apps/xwininfo
+x11-base/xorg-drivers
+x11-base/xorg-server
+x11-libs/gtk+
+x11-misc/dmenu
+x11-misc/slock
+x11-misc/slstatus
+x11-misc/tabbed
+x11-misc/unclutter
+x11-misc/wmname
+x11-misc/xssstate
+x11-terms/st
+x11-wm/dwm
+```
+
+Before emerging, you have to add the `drkhsh` overlay (where `slstatus` resides).
+Begin by installing `app-eselect/eselect-repository` and `dev-vcs/git` so you
+can use third-party `git` overlays:
+```
+emerge -a app-eselect/eselect-repository dev-vcs/git
+```
+
+Then, add the `drkhsh` (and my own, heh) overlay:
+```
+eselect repository add drkhsh-overlay git https://github.com/drkhsh/overlay.git
+eselect repository add willeponken git https://github.com/willeponken/gentoo-overlay.git
+```
+
+Syncronize the overlays with Portage:
+```
+emerge --sync
+```
+
+And install all packages in the `@favorites` set with:
+```
+emerge -a @favorites
 ```
