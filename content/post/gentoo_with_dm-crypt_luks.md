@@ -585,6 +585,7 @@ Enter `visudo` and uncomment the `# %wheel ALL=(ALL) NOPASSWD: ALL` block:
 visudo # Uncomment the block, and save and exit.
 ```
 
+## Install my favorite Portage set
 Below you have my favorites, it contains a X11 environment running `dwm`. Add it
 to `/etc/portage/sets/favorites`:
 ```
