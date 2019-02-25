@@ -604,7 +604,6 @@ app-portage/cpuid2cpuflags
 app-portage/eix
 app-portage/elogv
 app-portage/gentoolkit
-app-portage/layman
 app-portage/repoman
 app-shells/gentoo-zsh-completions
 app-shells/zsh
