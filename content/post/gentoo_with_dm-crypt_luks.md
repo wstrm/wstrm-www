@@ -1,7 +1,7 @@
 ---
 title: "Gentoo with DM-Crypt LUKS and EFI"
 date: "2018-06-16"
-lastmod: "2019-02-24"
+lastmod: "2019-03-03"
 description: "Meta guide to install Gentoo with DM-Crypt LUKS and EFI."
 categories:
     - "gentoo"
@@ -393,7 +393,7 @@ the kernel:
 (chroot) make menuconfig
 ```
 
-Configure the kernel (TODO: Missing Crypto for dm-crypt):
+Configure the kernel:
 ```
 General setup > [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
 General setup > Initial RAM filesystem and RAM disk (initramfs/initrd) support > Initramfs source file(s) (/usr/src/initramfs)
