@@ -46,7 +46,7 @@ copyright = ""            # default: author.name
   since = "2018"            # Site creation time
 
   # site info (optional)
-  logoTitle = "William Wennerström"        # default: the title value
+  logoTitle = "W. Wennerström"        # default: the title value
   keywords = ["william", "wennerström", "programming", "willeponken", "computers"]
   description = "Hugo theme even example site."
 
