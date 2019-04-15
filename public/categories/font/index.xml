@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>font on William Wennerström&#39;s personal webpage</title>
+    <link>http://localhost:1313/categories/font/</link>
+    <description>Recent content in font on William Wennerström&#39;s personal webpage</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 04 Mar 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://localhost:1313/categories/font/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Better fonts and more symbols with Gentoo</title>
+      <link>http://localhost:1313/post/better_fonts_and_more_symbols_with_gentoo/</link>
+      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/better_fonts_and_more_symbols_with_gentoo/</guid>
+      <description>What do I need? It&amp;rsquo;s really annoying when viewing some random website and all you see is those boxes instead of the actual symbol. So the first thing to do is to install some fonts that support many code points, like Google&amp;rsquo;s Noto. There&amp;rsquo;s also alot of web pages that use Microsoft&amp;rsquo;s Corefonts.
+When it comes to the licensing, Google&amp;rsquo;s Noto is under the SIL Open Font License - which is open source - which is nice.</description>
+    </item>
+    
+  </channel>
+</rss>

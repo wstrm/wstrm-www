@@ -1,7 +1,7 @@
 ---
 title: "About Me"
 date: 2018-06-16
-lastmod: 2018-06-16
+lastmod: 2019-04-15
 menu: "main"
 weight: 50
 
@@ -11,4 +11,4 @@ weight: 50
 > - Carl Sagan
 
 ## Curriculum Vitae
-Please have a look in my [CV repository](https://github.com/willeponken/cv/releases/latest).
+Please have a look in my [CV repository](https://github.com/optmzr/cv/releases/latest).

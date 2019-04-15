@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>William Wennerström&#39;s personal webpage</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on William Wennerström&#39;s personal webpage</description>
+    <title>Posts on William Wennerström&#39;s personal webpage</title>
+    <link>http://localhost:1313/post/</link>
+    <description>Recent content in Posts on William Wennerström&#39;s personal webpage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 16 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 Mar 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>About Me</title>
-      <link>http://localhost:1313/about/</link>
-      <pubDate>Sat, 16 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/about/</guid>
-      <description>It is far better to grasp the universe as it really is than to persist in delusion,&amp;hellip; - Carl Sagan
- Curriculum Vitae Please have a look in my CV repository.</description>
-    </item>
     
     <item>
       <title>Better fonts and more symbols with Gentoo</title>

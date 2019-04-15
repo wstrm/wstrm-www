@@ -47,7 +47,7 @@ copyright = ""            # default: author.name
 
   # site info (optional)
   logoTitle = "W. Wennerström"        # default: the title value
-  keywords = ["william", "wennerström", "programming", "willeponken", "computers"]
+  keywords = ["william", "wennerström", "programming", "willeponken", "computers", "optmzr"]
   description = "Hugo theme even example site."
 
   # paginate of archives, tags and categories
@@ -138,6 +138,6 @@ copyright = ""            # default: author.name
     alipay = "/path/to/your/alipay-qr-code.png"
 
   [params.social]
-    a-email = "mailto:william@willeponken.me"
+    a-email = "mailto:william@optmzr.se"
     e-linkedin = "https://se.linkedin.com/in/william-wennerstr%C3%B6m-98b0a8b3"
-    g-github = "https://github.com/willeponken"
+    g-github = "https://github.com/optmzr"

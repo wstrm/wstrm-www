@@ -1,38 +1,120 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on willeponken</title>
-    <link>https://willeponken.me/categories/</link>
-    <description>Recent content in Categories on willeponken</description>
+    <title>Categories on William Wennerström&#39;s personal webpage</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on William Wennerström&#39;s personal webpage</description>
     <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
     
-	<atom:link href="https://willeponken.me/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Encryption</title>
-      <link>https://willeponken.me/categories/encryption/</link>
-      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      <title>batman-adv</title>
+      <link>http://localhost:1313/categories/batman-adv/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://willeponken.me/categories/encryption/</guid>
+      <guid>http://localhost:1313/categories/batman-adv/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Gentoo</title>
-      <link>https://willeponken.me/categories/gentoo/</link>
-      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      <title>cjdns</title>
+      <link>http://localhost:1313/categories/cjdns/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://willeponken.me/categories/gentoo/</guid>
+      <guid>http://localhost:1313/categories/cjdns/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Os</title>
-      <link>https://willeponken.me/categories/os/</link>
-      <pubDate>Sat, 21 May 2016 00:00:00 +0000</pubDate>
+      <title>encryption</title>
+      <link>http://localhost:1313/categories/encryption/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://willeponken.me/categories/os/</guid>
+      <guid>http://localhost:1313/categories/encryption/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>font</title>
+      <link>http://localhost:1313/categories/font/</link>
+      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/font/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gentoo</title>
+      <link>http://localhost:1313/categories/gentoo/</link>
+      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/gentoo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hyperboria</title>
+      <link>http://localhost:1313/categories/hyperboria/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/hyperboria/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mesh</title>
+      <link>http://localhost:1313/categories/mesh/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/mesh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network</title>
+      <link>http://localhost:1313/categories/network/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/network/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>os</title>
+      <link>http://localhost:1313/categories/os/</link>
+      <pubDate>Sat, 16 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/os/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rendering</title>
+      <link>http://localhost:1313/categories/rendering/</link>
+      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/rendering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>wifi</title>
+      <link>http://localhost:1313/categories/wifi/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/wifi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>wireless</title>
+      <link>http://localhost:1313/categories/wireless/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/categories/wireless/</guid>
       <description></description>
     </item>
     
