@@ -1,27 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>wifi on William Wennerström&#39;s personal webpage</title>
-    <link>http://localhost:1313/categories/wifi/</link>
-    <description>Recent content in wifi on William Wennerström&#39;s personal webpage</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 23 Sep 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="http://localhost:1313/categories/wifi/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Creating the real Hyperboria in the North</title>
-      <link>http://localhost:1313/post/creating_the_real_hyperboria_in_the_north/</link>
-      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/post/creating_the_real_hyperboria_in_the_north/</guid>
-      <description>Luleå, Sweden, is actually not that far away from Hyperborea.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wifi on William Wennerström&#39;s personal webpage</title><link>http://localhost:1313/categories/wifi/</link><description>Recent content in wifi on William Wennerström&#39;s personal webpage</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 23 Sep 2018 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/wifi/index.xml" rel="self" type="application/rss+xml"/><item><title>Creating the real Hyperboria in the North</title><link>http://localhost:1313/post/creating_the_real_hyperboria_in_the_north/</link><pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate><guid>http://localhost:1313/post/creating_the_real_hyperboria_in_the_north/</guid><description>Luleå, Sweden, is actually not that far away from Hyperborea.
 Note: I&amp;rsquo;m actually talking about the Cjdns mesh network, Hyperboria, not any mythical utopia.
 Background I&amp;rsquo;ve been thinking of running a mesh network since ~4 years ago when I and a classmate had a school project where we tried to make an Cjdns network that was easy to join for everyone using a user friendly captive portal.
-So, now I&amp;rsquo;m at it again, and forcing some friends to participate in a IBSS + B.</description>
-    </item>
-    
-  </channel>
-</rss>
+So, now I&amp;rsquo;m at it again, and forcing some friends to participate in a IBSS + B.</description></item></channel></rss>
