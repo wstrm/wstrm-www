@@ -1,7 +1,8 @@
 ---
 title: "Creating the real Hyperboria in the North"
 date: "2018-09-23"
-categories:
+aliases: [/post/creating_the_real_hyperboria_in_the_north/]
+tags:
     - "mesh"
     - "network"
     - "hyperboria"

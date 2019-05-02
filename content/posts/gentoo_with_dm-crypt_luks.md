@@ -1,9 +1,10 @@
 ---
 title: "Gentoo with DM-Crypt LUKS and EFI"
 date: "2018-06-16"
-lastmod: "2019-04-22"
+lastmod: "2019-03-03"
 description: "Meta guide to install Gentoo with DM-Crypt LUKS and EFI."
-categories:
+aliases: "/post/gentoo_with_dm-crypt_luks/"
+tags:
     - "gentoo"
     - "os"
     - "encryption"
@@ -77,7 +78,7 @@ dd if=/dev/urandom of=/dev/sdX{1..3} bs=1M
 ```
 
 ## Format main parition with LUKS
-Let `cryptsetup` format `/dev/sdX2` as a LUKS partition:
+Let `cryptsetup` format `/dev/sdX3` as a LUKS partition:
 ```
 cryptsetup --key-size 512 --hash sha512 luksFormat /dev/sdX2
 ```
@@ -109,7 +110,7 @@ mount -t ext4 /dev/mapper/root /mnt/gentoo
 
 Create needed directories in root:
 ```
-mkdir /mnt/gentoo/{home,boot}
+mkdir /mnt/gentoo/{home,boot,boot/efi}
 ```
 
 ## Check date and time
@@ -149,7 +150,7 @@ gpg --verify stage3-amd64-*.DIGESTS.asc
 
 Check the digests:
 ```
-awk '/SHA512 HASH/{getline;print}' stage3-amd64-*.DIGESTS.asc | sha512sum --check
+awk '/SHA512 HASH/{getline;print}' stage3-amd64-*.DIGESTS.asc | sha512sum -- check
 ```
 
 Double check you're in the `/mnt/gentoo` directory, then issue:
@@ -171,7 +172,7 @@ cd
 Edit the `/mnt/gentoo/etc/portage/make.conf` file (modify for your computer):
 ```
 # The holy USE
-USE=""
+USE="device-mapper"
 
 # C and C++ compiler options for GCC.
 CFLAGS="-march=native -O2 -pipe"
@@ -181,7 +182,7 @@ EMERGE_DEFAULT_OPTS="--jobs 2 --load-average 7.2" # 2 parallel jobs, at 8*0.9 lo
 CPU_FLAGS_X86="aes avx f16c mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3" # check w/ cpuid2cpuflags
 
 # Only free software, please.
-ACCEPT_LICENSE="-* @FREE"
+ACCEPT_LICENSE="-* @FREE CC-Sampling-Plus-1.0"
 
 # WARNING: Changing your CHOST is not something that should be done lightly.
 # Please consult http://www.gentoo.org/doc/en/change-chost.xml before changing.
@@ -210,7 +211,7 @@ FEATURES="split-elog buildpkg"
 
 # Settings for X11 (make sure these are correct for your hardware).
 VIDEO_CARDS="intel i965"
-INPUT_DEVICES="libinput"
+INPUT_DEVICES="evdev synaptics"
 ```
 
 ## Prepare and enter `chroot`
@@ -398,7 +399,7 @@ Configure the kernel:
 General setup > [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
 General setup > Initial RAM filesystem and RAM disk (initramfs/initrd) support > Initramfs source file(s) (/usr/src/initramfs)
 
-Enable the block layer > Partition Types > [*] EFI GUID Partition support
+Enable the block layer > Partition Types > [*]   EFI GUID Partition support
 
 Processor type and features > [*] EFI runtime service support
 Processor type and features > EFI runtime service support > <*> EFI stub support
@@ -406,12 +407,12 @@ Processor type and features > [*] Built-in kernel command line (root=/dev/mapper
 
 Device Drivers > Generic Driver Options > [] Support for uevent helper
 Device Drivers > Generic Driver Options > () path to uevent helper
-Device Drivers > Multiple devices driver support (RAID and LVM) > <*> Device mapper support > <*> Crypt target support
+Device Drivers > Multiple devices driver support (RAID and LVM) > <*>   Device mapper support > <*>     Crypt target support
 
-Device Drivers > Multiple devices driver support (RAID and LVM) > <*> Device mapper support > <*> Mirror target
-Device Drivers > Graphics support > Frame buffer Devices > Support for frame buffer devices > [*] Enable firmware EDID
-Device Drivers > Graphics support > Frame buffer Devices > [*] EFI-based Framebuffer Support
-Device Drivers > Graphics support > Console display driver support > -*- Framebuffer Console support
+Device Drivers > Multiple devices driver support (RAID and LVM) > <*>   Device mapper support > <*>     Mirror target
+Device Drivers > Graphics support > Support for frame buffer devices > [*]   Enable firmware EDID
+Device Drivers > Graphics support > Support for frame buffer devices > [*]   EFI-based Framebuffer Support
+Device Drivers > Graphics support > Console display driver support > <*> Framebuffer Console support
 
 # You probably want USB 3.0 on most modern systems.
 Device Drivers > USB support > <*> xHCI HCD (USB 3.0) support
@@ -433,11 +434,8 @@ Add required USE-flags for initramfs in `/etc/portage/package.use/initramfs`:
 ```
 sys-apps/busybox static
 sys-fs/cryptsetup static -gcrypt kernel
-sys-fs/lvm2 -thin
 
 # Sadly, we need lvm for cryptsetup to work...
-# The following can be added by issuing `dispatch-conf` after the command below
-# emerge -av sys-fs/crypt[..] has been run, and then run the same command again.
 # required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
 # required by cryptsetup (argument)
 >=dev-libs/libgpg-error-1.29 static-libs
@@ -489,6 +487,8 @@ die() {
 mount -t proc none /proc
 mount -t sysfs none /sys
 
+echo "Welcome, dear Sir King Lord William the First..."
+
 # Open encrypted partition, and place at /dev/mapper/root.
 # NOTE: Update drive letter below.
 cryptsetup open /dev/sdX2 root && root=/dev/mapper/root || die
@@ -536,7 +536,7 @@ Add `root` filesystem to `/etc/fstab`:
 
 Install some usefull utilities before reboot:
 ```
-(chroot) emerge -a net-misc/dhcpcd
+(chroot) emerge -a net-misc/dhcpcd app-misc/screen
 (chroot) emerge -a net-wireless/wpa_supplicant # If you use WiFi.
 ```
 

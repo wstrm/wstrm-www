@@ -3,7 +3,8 @@ title: "Better fonts and more symbols with Gentoo"
 date: "2019-03-04"
 lastmod: "2019-03-04"
 description: "Support most fonts and symbols with Gentoo"
-categories:
+aliases: [/post/better_fonts_and_more_symbols_with_gentoo/]
+tags:
     - "gentoo"
     - "font"
     - "rendering"
