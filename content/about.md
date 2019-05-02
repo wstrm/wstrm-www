@@ -1,10 +1,7 @@
 ---
-title: "About Me"
+title: "About"
 date: 2018-06-16
 lastmod: 2019-04-15
-menu: "main"
-weight: 50
-
 ---
 
 > It is far better to grasp the universe as it really is than to persist in delusion,...
