@@ -1,7 +1,7 @@
 ---
 title: "Gentoo with DM-Crypt LUKS and EFI"
 date: "2018-06-16"
-lastmod: "2019-03-03"
+lastmod: "2019-05-08"
 description: "Meta guide to install Gentoo with DM-Crypt LUKS and EFI."
 aliases: "/post/gentoo_with_dm-crypt_luks/"
 tags:
@@ -577,8 +577,8 @@ Now, when you've succesfully booted into your new system, login as root and
 create a new user that can use `sudo`:
 ```
 emerge -a app-admin/sudo
-useradd -m -G users,wheel,audio,video -s /bin/bash willeponken # Change to your username.
-passwd willeponken # You'll get prompted to set the users password.
+useradd -m -G users,wheel,audio,video -s /bin/bash optmzr # Change to your username.
+passwd optmzr # You'll get prompted to set the users password.
 ```
 
 Enter `visudo` and uncomment the `# %wheel ALL=(ALL) NOPASSWD: ALL` block:
@@ -696,7 +696,7 @@ emerge -a app-eselect/eselect-repository dev-vcs/git
 Then, add the `drkhsh` (and my own, heh) overlay:
 ```
 eselect repository add drkhsh-overlay git https://github.com/drkhsh/overlay.git
-eselect repository add willeponken git https://github.com/willeponken/gentoo-overlay.git
+eselect repository enable optmzr
 ```
 
 Syncronize the overlays with Portage:
