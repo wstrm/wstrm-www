@@ -433,7 +433,7 @@ Cryptographic API > <*> User-space interface for symmetric key cipher algorithms
 Add required USE-flags for initramfs in `/etc/portage/package.use/initramfs`:
 ```
 sys-apps/busybox static
-sys-fs/cryptsetup static -gcrypt kernel
+sys-fs/cryptsetup static kernel -gcrypt -openssl
 
 # Sadly, we need lvm for cryptsetup to work...
 # required by sys-fs/cryptsetup-1.7.5::gentoo[static,-static-libs]
