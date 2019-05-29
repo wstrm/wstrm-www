@@ -1,7 +1,7 @@
 ---
 title: "Gentoo with DM-Crypt LUKS and EFI"
 date: "2018-06-16"
-lastmod: "2019-05-08"
+lastmod: "2019-05-29"
 description: "Meta guide to install Gentoo with DM-Crypt LUKS and EFI."
 aliases: "/post/gentoo_with_dm-crypt_luks/"
 tags:
@@ -172,17 +172,21 @@ cd
 Edit the `/mnt/gentoo/etc/portage/make.conf` file (modify for your computer):
 ```
 # The holy USE
-USE="device-mapper"
+# Modify to fit your preferences.
+USE="unicode savedconfig offensive alsa zsh-completion dmenu"
 
 # C and C++ compiler options for GCC.
 CFLAGS="-march=native -O2 -pipe"
 CXXFLAGS="${CFLAGS}"
-MAKEOPTS="-j4" # 4 threads per job
-EMERGE_DEFAULT_OPTS="--jobs 2 --load-average 7.2" # 2 parallel jobs, at 8*0.9 load (90 % load on all cores)
+
+# Threads and jobs for my PC, with 16 threads.
+MAKEOPTS="-j8" # 8 threads per job
+EMERGE_DEFAULT_OPTS="--jobs 2 --load-average 14.4" # 2 parallel jobs, at 16*0.9 load (90 % load on all cores)
+
 CPU_FLAGS_X86="aes avx f16c mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3" # check w/ cpuid2cpuflags
 
 # Only free software, please.
-ACCEPT_LICENSE="-* @FREE CC-Sampling-Plus-1.0"
+ACCEPT_LICENSE="-* @FREE"
 
 # WARNING: Changing your CHOST is not something that should be done lightly.
 # Please consult http://www.gentoo.org/doc/en/change-chost.xml before changing.
@@ -211,7 +215,7 @@ FEATURES="split-elog buildpkg"
 
 # Settings for X11 (make sure these are correct for your hardware).
 VIDEO_CARDS="intel i965"
-INPUT_DEVICES="evdev synaptics"
+INPUT_DEVICES="libinput"
 ```
 
 ## Prepare and enter `chroot`
@@ -487,8 +491,6 @@ die() {
 mount -t proc none /proc
 mount -t sysfs none /sys
 
-echo "Welcome, dear Sir King Lord William the First..."
-
 # Open encrypted partition, and place at /dev/mapper/root.
 # NOTE: Update drive letter below.
 cryptsetup open /dev/sdX2 root && root=/dev/mapper/root || die
@@ -590,100 +592,115 @@ visudo # Uncomment the block, and save and exit.
 Below you have my favorites, it contains a X11 environment running `dwm`. Add it
 to `/etc/portage/sets/favorites`:
 ```
-app-admin/pass
-app-admin/stow
-app-admin/sudo
-app-arch/rar
-app-arch/unrar
-app-arch/unzip
-app-arch/zip
-app-backup/restic
-app-editors/neovim
+# Portage
 app-eselect/eselect-repository
-app-eselect/eselect-vi
-app-misc/screen
 app-portage/cpuid2cpuflags
 app-portage/eix
-app-portage/elogv
-app-portage/gentoolkit
 app-portage/repoman
-app-shells/gentoo-zsh-completions
+app-portage/gentoolkit
+
+# ZSH
 app-shells/zsh
 app-shells/zsh-completions
+app-shells/gentoo-zsh-completions
+
+# Mutt
 app-text/antiword
 app-text/extract_url
 app-text/mupdf
-app-text/poppler
-app-text/tree
-app-vim/gentoo-syntax
-dev-lang/go
+mail-client/mutt
+media-libs/exiftool
+
+# Neovim
+app-editors/neovim
+media-fonts/powerline-symbols
+
+# Python
 dev-python/pip
 dev-python/virtualenv
+
+# C
 dev-util/ctags
 dev-util/strace
+
+# Git
 dev-vcs/git
 dev-vcs/git-lfs
-mail-client/mutt
-mail-mta/msmtp
-media-fonts/powerline-symbols
+
+# Go
+dev-lang/go
+
+# Backup
+sys-process/cronie
+app-backup/restic
+
+# Remote
+net-misc/mosh
+
+# Connectivity
+net-misc/dhcpcd
+net-wireless/wpa_supplicant
+net-vpn/openvpn
+
+# Powersave
+sys-apps/hprofile
+
+# Time
+net-misc/chrony
+
+# Tools
+app-admin/pass
+app-admin/stow
+app-admin/sudo
+app-arch/unzip
+app-arch/zip
+app-misc/screen
+app-text/tree
 media-gfx/feh
-media-gfx/gimp
-media-gfx/graphviz
 media-gfx/scrot
-media-libs/exiftool
-media-libs/imlib2
-media-sound/alsa-utils
 media-video/ffmpeg
-media-video/mpv
+media-sound/alsa-utils
 net-analyzer/nethogs
-net-analyzer/openbsd-netcat
 net-analyzer/tcpdump
 net-analyzer/traceroute
 net-dns/bind-tools
-net-dns/openresolv
-net-misc/chrony
-net-misc/dhcpcd
-net-misc/mosh
-net-misc/youtube-dl
-net-vpn/openvpn
-sys-apps/exa
-sys-apps/haveged
-sys-apps/hprofile
-sys-apps/mlocate
 sys-apps/pciutils
+net-misc/youtube-dl
+sys-apps/mlocate
 sys-apps/ripgrep
-sys-devel/gcc
-sys-fs/cryptsetup
-sys-fs/ncdu
-sys-kernel/gentoo-sources
-sys-kernel/linux-firmware
-sys-power/suspend
-sys-process/cronie
 sys-process/htop
-www-client/firefox
 www-client/lynx
-www-client/surf
-x11-apps/setxkbmap
-x11-apps/xbacklight
-x11-apps/xev
-x11-apps/xfd
-x11-apps/xhost
-x11-apps/xlsfonts
-x11-apps/xmodmap
-x11-apps/xrandr
-x11-apps/xwininfo
+
+# Sound
+media-libs/alsa-lib
+
+# X11 system
 x11-base/xorg-drivers
 x11-base/xorg-server
-x11-libs/gtk+
+x11-wm/dwm
+
+# X11 apps
+x11-apps/xprop
 x11-misc/dmenu
 x11-misc/slock
 x11-misc/slstatus
 x11-misc/tabbed
+x11-terms/st
+www-client/surf
+
+# X11 tools
 x11-misc/unclutter
 x11-misc/wmname
 x11-misc/xssstate
-x11-terms/st
-x11-wm/dwm
+x11-apps/setxkbmap
+x11-apps/xbacklight
+x11-apps/xev
+x11-apps/xmodmap
+x11-apps/xrandr
+x11-misc/xclip
+
+# Misc
+sys-apps/haveged
 ```
 
 Before emerging, you have to add the `drkhsh` overlay (where `slstatus` resides).
