@@ -121,5 +121,18 @@ xhost +local:
 
 Civilization 5
 ```
-CFLAGS="-march=native -O1 -pipe" emerge -1 x11-libs/libxcb
+CFLAGS="-march=native -O1 -pipe" emerge -1 x11-libs/libxcb media-sound/pulseaudio sys-libs/glibc
+```
+```
+[371471.978756] Civ5XP[2293]: segfault at 14 ip 000000000885bd5f sp 00000000882ff080 error 4
+[371471.978762] Civ5XP[2292]: segfault at 0 ip 0000000008cd8534 sp 00000000e636afe0 error 4
+[371471.978763]  in Civ5XP[8048000+22a7000]
+[371471.978764]  in Civ5XP[8048000+22a7000]
+[371471.978767] Code: 00 00 00 00 5b 81 c3 f2 ea 62 01 8b b4 24 88 00 00 00 8b bc 24 84 00 00 00 8b 94 24 80 00 00 00 0f b7 87 88 00 00 00 8b 4a 04 <8b>
+2c 81 85 ed 0f 84 ef 00 00 00 8b 0a 8b 52 08 89 54 24 20 f3 0f
+[371471.978768] Code: 44 24 20 c7 00 00 00 00 00 83 c4 0c 5e 5f 5b 5d c3 0f 0b 55 53 57 56 83 ec 0c e8 00 00 00 00 5b 8b 6c 24 2c 8b 44 24 24 8b 00 <8b>
+70 14 8b 48 18 0f b7 d5 89 54 24 08 8d 14 11 8b 78 04 81 c3 ac
+```
+```
+taskset -c 0-3 %command%
 ```

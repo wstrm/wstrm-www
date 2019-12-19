@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ -f /usr/bin/pandoc ]; then
+  PANDOC=/usr/bin/pandoc
+fi
+
+if [ -f /usr/local/bin/pandoc ]; then
+  PANDOC=/usr/local/bin/pandoc
+fi
+
+$PANDOC \
+        --bibliography=content/posts/m7011e-project-roaster-report/sources.bib \
+        --mathjax \
+        --metadata link-citations=true \
+        --from markdown+fenced_divs+pipe_tables \
+        "$@"
