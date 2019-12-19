@@ -8,7 +8,7 @@ if [ -f /usr/local/bin/pandoc ]; then
 fi
 
 $PANDOC \
-        --bibliography=content/posts/m7011e-project-roaster-report/sources.bib \
+        --bibliography=content/posts/course-project-showcase-roaster-inc/sources.bib \
         --mathjax \
         --metadata link-citations=true \
         --from markdown+fenced_divs+pipe_tables \
