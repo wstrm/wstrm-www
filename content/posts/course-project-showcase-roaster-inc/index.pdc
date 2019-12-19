@@ -552,7 +552,7 @@ The source code is available at:
 Below follows the whole project report with all our design decisions and lessons
 learned through out the project. Enjoy!
 
-__Note: The whole report is converted from LaTex using Pandoc, so you may find
+__Note: The whole report is converted from LaTex using Pandoc, so you might find
 some oddities.__
 
 The problem
@@ -1438,7 +1438,7 @@ Mithril.js
 
 Mithril.js has been a challenge to work with, accidentally using the
 documentation for version 2 of Mithril.js whilst actually using
-Mitril.js version 1. The documentation available is also sparse and not
+Mithril.js version 1. The documentation available is also sparse and not
 very exhaustive. The community is still small compared to the framework
 giants like React.js, Angular.js and Vue.js which makes finding good
 examples that describe advanced maneuvers a lot harder. The source code
