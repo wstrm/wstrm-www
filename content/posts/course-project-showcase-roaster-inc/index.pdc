@@ -542,15 +542,18 @@ defined as TypeScript instead of HTML. As an experiment we decided to also
 define the CSS in the same source files, but as simple variables that can be
 injected using Mithril.js' `style` attribute.
 
-The web site is currently available at:
-[roast.software](https://roast.software), so pay a quick visit and play around
+**The web site is currently available at:**
+[https://roast.software](https://roast.software), so pay a quick visit and play around
 with it!
-
-The source code is available at:
-[github.com/RoastSoftware/roaster](https://github.com/RoastSoftware/roaster).
 
 Below follows the whole project report with all our design decisions and lessons
 learned through out the project. Enjoy!
+
+*The source code is available at:*
+[https://github.com/RoastSoftware/roaster](https://github.com/RoastSoftware/roaster).
+
+*The PDF document for the full report:*
+[https://github.com/optmzr/m7011e-project-roaster-report/releases/download/v1.0.0/M7011E_Project_Roaster_Report_wenwil_5_phihjo_2.pdf](https://github.com/optmzr/m7011e-project-roaster-report/releases/download/v1.0.0/M7011E_Project_Roaster_Report_wenwil_5_phihjo_2.pdf)
 
 __Note: The whole report is converted from LaTex using Pandoc, so you might find
 some oddities.__
