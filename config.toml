@@ -1,9 +1,9 @@
 languageCode = "en-us"
-title = "optmzr"
+title = "wstrm"
 enableRobotsTXT = true
 enableEmoji = true
 # Copyright notice. This is displayer in the footer.
-copyright = "Copyright &copy; 2018-2019 William Wennerström"
+copyright = "Copyright &copy; 2018-2020 William Wennerström"
 custom_css = "/static/css/custom.css"
 theme = "hugo_theme_pickles"
 
@@ -15,8 +15,8 @@ theme = "hugo_theme_pickles"
   #facebook = "Your Facebook username"
   #instagram = "Your Instagram username"
   #googleplus = "Your Google+ account URL" # https://plus.google.com/u/0/xxxxxx
-  github = "optmzr"
-  gitlab = "optmzr"
+  github = "wstrm"
+  gitlab = "wstrm"
   #npm = "Your npm username"
   #codepen = "Your CodePen username"
   #dribbble = "Your Dribbble username"
@@ -32,9 +32,9 @@ theme = "hugo_theme_pickles"
   # Google Analytics API key.
   #ga_api_key = "Your Google Analytics tracking id"
   author = "William Wennerström"
-  authorwebsite = "optmzr.se"
+  authorwebsite = "wstrm.dev"
   avatar = "/images/avatar.jpg"
-  contact = "mailto:william@optmzr.se"
+  contact = "mailto:william@wstrm.dev"
   bio = "Hello, I like computers."
   # Short subtitle/tagline. This is displayed in the header.
   subtitle = "William Wennerström's personal web page."
