@@ -1,5 +1,5 @@
-optmzr-www
+wstrm-www
 ==========
 ```
-hugo --baseURL "https://optmzr.se/" --enableGitInfo --gc --ignoreCache --minify
+hugo --baseURL "https://wstrm.dev/" --enableGitInfo --gc --ignoreCache --minify
 ```

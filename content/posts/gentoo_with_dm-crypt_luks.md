@@ -579,8 +579,8 @@ Now, when you've succesfully booted into your new system, login as root and
 create a new user that can use `sudo`:
 ```
 emerge -a app-admin/sudo
-useradd -m -G users,wheel,audio,video -s /bin/bash optmzr # Change to your username.
-passwd optmzr # You'll get prompted to set the users password.
+useradd -m -G users,wheel,audio,video -s /bin/bash wstrm # Change to your username.
+passwd wstrm # You'll get prompted to set the users password.
 ```
 
 Enter `visudo` and uncomment the `# %wheel ALL=(ALL) NOPASSWD: ALL` block:
