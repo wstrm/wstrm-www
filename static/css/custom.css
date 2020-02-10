@@ -1,0 +1,43 @@
+@font-face {
+    font-family: CourierCodeRoman;
+    src: url(/fonts/CourierCode-Roman.ttf) format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: CourierCodeBold;
+    src: url(/fonts/CourierCode-Bold.ttf) format('truetype');
+    font-weight: 800;
+    font-style: bold;
+}
+
+.c-title, .p-subtitle, h1, h2, h3, h4, h5, h6 {
+    font-family: "CourierCodeRoman", "Courier", "Open Sans", sans-serif;
+}
+
+.l-header > .c-title, .p-author__name {
+    font-family: "CourierCodeBold", "Courier", "Open Sans", sans-serif;
+    font-weight: 800;
+}
+
+.l-header > .c-title:after {
+    content: ".";
+}
+
+aside.p-author {
+    justify-content: space-between;
+}
+
+body {
+    font-family: "Monteserrat";
+}
+
+.c-article__summary {
+    font-size: 1.6rem;
+    color: #555;
+}
+
+.c-article__meta {
+    font-size: 1.3rem;
+    color: #888;
+}
