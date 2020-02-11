@@ -11,6 +11,11 @@
     font-style: bold;
 }
 
+p.p-subtitle {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
 .c-title, .p-subtitle, h1, h2, h3, h4, h5, h6 {
     font-family: "CourierCodeRoman", "Courier", "Open Sans", sans-serif;
 }
