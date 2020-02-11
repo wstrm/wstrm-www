@@ -35,7 +35,7 @@ linkedin = "william-wennerstr%C3%B6m-98b0a8b3"
 #ga_api_key = "Your Google Analytics tracking id"
 author = "William Wennerström"
 authorwebsite = "wstrm.dev"
-avatar = "/images/avatar.jpg"
+avatar = "/images/avatar.png"
 contact = "mailto:william@wstrm.dev"
 bio = "Hello, I like computers."
 # Short subtitle/tagline. This is displayed in the header.
