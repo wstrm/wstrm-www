@@ -11,6 +11,8 @@ Here's a simple configuration for the Eduroam network, that has been verified to
 work for LTU (Luleå University of Technology), and several airports in Sweden.
 Hopefully it also works at the other universities.
 
+<!--more-->
+
 ```
 network={
         ssid="eduroam"

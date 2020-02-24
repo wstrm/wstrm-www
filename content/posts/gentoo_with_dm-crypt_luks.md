@@ -17,6 +17,8 @@ The guide is heavily based upon [Sakaki's EFI Install Guide](https://wiki.gentoo
 
 If this is your first time installing Gentoo it's probably a better idea to follow [Sakaki's EFI Install Guide](https://wiki.gentoo.org/wiki/Sakaki%28s_EFI_Install_Guide), or follow the [Gentoo's Handbook](https:/wiki.gentoo.org/wiki/Handbook:AMD64/Full/Installation)
 
+<!--more-->
+
 ## Burn Minimal Installation CD to USB
 
 Download the Minimal Installation CD from: https://www.gentoo.org/downloads/
