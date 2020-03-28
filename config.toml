@@ -39,7 +39,7 @@ avatar = "/images/avatar.png"
 contact = "mailto:william@wstrm.dev"
 bio = "Hello, I like computers."
 # Short subtitle/tagline. This is displayed in the header.
-subtitle = "Welcome to William Wennerström's personal pages."
+subtitle = ""
 # Logo image. This is displayed ogp image.
 #logo = "/images/avatar.jpg"
 #favicon = "/path/to/favicon"
