@@ -1,6 +1,6 @@
 ---
 title: "Upgrade Ubuntu Cosmic (18.10) to Focal (20.04)"
-date: 2020-04-22T14:41:59+01:00
+date: 2020-04-22
 ---
 
 There is no supported upgrade path from Ubuntu Cosmic to the new Focal release.
