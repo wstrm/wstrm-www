@@ -480,7 +480,7 @@ Create initramfs:
 (chroot) chroot /usr/src/initramfs /bin/busybox --install -s
 ```
 
-Create `/usr/src/initramfs/init` with the following content (NOTE: update to correct drive letters):
+Create `/usr/src/initramfs/init` with the following content:
 ```
 #!/bin/busybox sh
 
@@ -492,16 +492,28 @@ die() {
 # Mount the /proc and /sys filesystems.
 mount -t proc none /proc
 mount -t sysfs none /sys
+mount -t devtmpfs none /dev
+
+# Be a little bit more quiet.
+echo 0 > /proc/sys/kernel/printk
+clear
+
+wait # For dev.
 
 # Open encrypted partition, and place at /dev/mapper/root.
-# NOTE: Update drive letter below.
-cryptsetup open /dev/sdX2 root && root=/dev/mapper/root || die
+cryptsetup open $(findfs PARTLABEL=root) root && root=/dev/mapper/root || die
+
+wait # For cryptsetup.
+
+# It's okay to speak again.
+echo 1 > /proc/sys/kernel/printk
 
 mount -o ro /dev/mapper/root /mnt/root || die
 
 # Clean up
 umount /proc
 umount /sys
+umount /dev
 
 # Switch to real root.
 exec switch_root /mnt/root /sbin/init || die
