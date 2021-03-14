@@ -472,7 +472,7 @@ Install `busybox` and `cryptsetup`:
 
 Create initramfs:
 ```
-(chroot) mkdir -p /usr/src/initramfs/{bin,dev,etc,lib,lib64,mnt/root,proc,root,sbin,sys,usr/sbin,usr/bin}
+(chroot) mkdir -p /usr/src/initramfs/{bin,dev,run,etc,lib,lib64,mnt/root,proc,root,sbin,sys,usr/sbin,usr/bin}
 (chroot) cp -a /dev/{null,console,tty,sdX1,sdX2} /usr/src/initramfs/dev/ # Replace X with correct drive letter.
 (chroot) cp -a /dev/{urandom,random} /usr/src/initramfs/dev
 (chroot) cp -a /sbin/cryptsetup /usr/src/initramfs/sbin/cryptsetup
@@ -493,6 +493,7 @@ die() {
 mount -t proc none /proc
 mount -t sysfs none /sys
 mount -t devtmpfs none /dev
+mount -t devtmpfs none /run
 
 # Be a little bit more quiet.
 echo 0 > /proc/sys/kernel/printk
@@ -514,6 +515,7 @@ mount -o ro /dev/mapper/root /mnt/root || die
 umount /proc
 umount /sys
 umount /dev
+umount /run
 
 # Switch to real root.
 exec switch_root /mnt/root /sbin/init || die
