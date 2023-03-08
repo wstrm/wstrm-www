@@ -6,7 +6,8 @@ date: 2023-03-08T09:40:00+02:00
 A common gripe I've had with Go is that the mantra is "you should handle
 errors", but at the same time the ergonomics of handling errors from
 `(io.ReadCloser).Close()` in a `defer` call is cumbersome. But fear no more!
-With the Go 1.20 release, there's a nifty way to handle this.
+With the Go 1.20 release, there's a nifty way to handle this with the new
+[`errors.Join`](https://pkg.go.dev/errors#Join).
 
 <!--more-->
 
@@ -54,12 +55,12 @@ reader for whatever reason.
 
 With the Go 1.20 release, you can now join errors so that you don't override the
 original error with the `(io.ReadCloser).Close()` error and not need to make the
-repetitive `if err != nil` check all the time. The new function `errors.Join`
-will only return errors that are non-`nil`. And if all are `nil`, it'll of
-course return `nil`. This perfectly fits the use case of handling close errors
-in a `defer`! 💥
+repetitive `if err != nil` check all the time. The new function
+[`errors.Join`](https://pkg.go.dev/errors#Join) will only return errors that are
+non-`nil`. And if all are `nil`, it'll of course return `nil`. This perfectly
+fits the use case of handling close errors in a `defer`! 💥
 
-Let's create a new anonymous `defer` function, and just pass along out original
+Let's create a new anonymous `defer` function, and just pass along our original
 `err` and the `(io.ReadCloser).Close()` error:
 
 ```
@@ -111,7 +112,8 @@ And here's a working example of this: https://go.dev/play/p/JDE-AJvujJr
 
 ## TL;DR
 
-Please set errors from `defer` calls with `errors.Join`:
+Please set errors from `defer` calls with
+[`errors.Join`](https://pkg.go.dev/errors#Join):
 
 ```
 func example(r io.ReadCloser) (err error) {
