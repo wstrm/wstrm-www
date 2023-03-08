@@ -91,9 +91,10 @@ fmt.Println(joinedErr)
 ```
 
 You can even take it one step further and get rid of the anonymous function by
-defining a "joinErrs(...)" that takes a pointer to the original error. We must
-pass the close function and invoke it within the `joinErrs(...)` because `defer`
-will evaluate the parameters directly (thanks to abhinavg for pointing this out[1]).
+defining a `joinErrs(...)` that takes a pointer to the original error. It's
+important that we pass the close function and invoke it _within_ the
+`joinErrs(...)` function because `defer` will evaluate the parameters directly
+(thanks to abhinavg for pointing this out[1]).
 
 So, we end up with something like this:
 
