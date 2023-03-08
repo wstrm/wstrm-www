@@ -15,7 +15,7 @@ Let me first explain a bit about the issue. Usually if you want to do the
 "right" thing and check for errors in a `defer` call, you end with something
 like this:
 
-```
+```go
 func example(r io.ReadCloser) (err error) {
     // We need this big anonymous function that takes up a bunch of
     // precious lines...
@@ -38,7 +38,7 @@ before the `defer` function is called we'll override the original error with our
 Even worse, if you're lazy and you figured the error check is not worth the
 amount of work, you end up with just ignoring the error altogether:
 
-```
+```go
 func example(r io.ReadCloser) (err error) {
     defer r.Close() // Oh no, we'll never know if this errors :(
 
@@ -63,7 +63,7 @@ fits the use case of handling close errors in a `defer`! 💥
 Let's create a new anonymous `defer` function, and just pass along our original
 `err` and the `(io.ReadCloser).Close()` error:
 
-```
+```go
 func example(r io.ReadCloser) (err error) {
 	defer func() {
 		err = errors.Join(err, r.Close()) // Magic!
@@ -79,7 +79,7 @@ Psst, here's a full working example: https://go.dev/play/p/J-rkdh0jYme
 Now, if any of the errors occur, the `err` will be set. In the case where both
 errors, we get a new `error` where they are joined with a `\n` delimiter:
 
-```
+```go
 origErr := errors.New("original error")
 closeErr := errors.New("close error")
 joinedErr := errors.Join(origErr, closeErr)
@@ -93,7 +93,7 @@ fmt.Println(joinedErr)
 You can even take it one step further and get rid of the anonymous function by
 defining a "joinErrs(...)" that takes a pointer to the original error, like so:
 
-```
+```go
 func joinErrs(origErr *error, newErr error) {
 	*origErr = errors.Join(*origErr, newErr)
 }
@@ -115,7 +115,7 @@ And here's a working example of this: https://go.dev/play/p/JDE-AJvujJr
 Please set errors from `defer` calls with
 [`errors.Join`](https://pkg.go.dev/errors#Join):
 
-```
+```go
 func example(r io.ReadCloser) (err error) {
 	defer func() {
 		err = errors.Join(err, r.Close()) // Magic!
