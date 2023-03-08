@@ -28,7 +28,7 @@ gitlab = "wstrm"
 #tumblr = "Your Tumblr username"
 #vimeo = "Your Vimeo username"
 #youtube = "Your YouTube username"
-linkedin = "william-wennerstr%C3%B6m-98b0a8b3"
+linkedin = "william-wennerstrom"
 # Disqus shortname
 #disqus = ""
 # Google Analytics API key.
@@ -83,3 +83,16 @@ weight = 100
 name  = "date"
 weight = 10
 pattern = "2017"
+
+[security]
+  enableInlineShortcodes = false
+  [security.exec]
+    allow = ['^dart-sass-embedded$', '^go$', '^npx$', '^postcss$', '^pandoc$']
+    osEnv = ['(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$']
+
+  [security.funcs]
+    getenv = ['^HUGO_']
+
+  [security.http]
+    methods = ['(?i)GET|POST']
+    urls = ['.*']
