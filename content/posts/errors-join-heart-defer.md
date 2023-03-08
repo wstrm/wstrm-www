@@ -5,10 +5,14 @@ date: 2023-03-08T09:40:00+02:00
 
 A common gripe I've had with Go is that the mantra is "you should handle
 errors", but at the same time the ergonomics of handling errors from
-`(io.ReadCloser).Close()` in a `defer` call is cumbersome.
+`(io.ReadCloser).Close()` in a `defer` call is cumbersome. But fear no more!
+With the Go 1.20 release, there's a nifty way to handle this.
 
-Either, if you want to do the "right" thing and check for errors, you end with
-something like this:
+<!--more-->
+
+Let me first explain a bit about the issue. Usually if you want to do the
+"right" thing and check for errors in a `defer` call, you end with something
+like this:
 
 ```
 func example(r io.ReadCloser) (err error) {
@@ -26,26 +30,27 @@ func example(r io.ReadCloser) (err error) {
 }
 ```
 
-However, this approach has the shortcoming that if the `err` variable was set
+This approach has a shortcoming. If the `err` variable was set
 before the `defer` function is called we'll override the original error with our
 `(io.ReadCloser).Close()` call error.
 
-Alternatively, if you're lazy and you figured the error check is not worth the amount of
-work, you end up with just ignoring the error altogether:
+Even worse, if you're lazy and you figured the error check is not worth the
+amount of work, you end up with just ignoring the error altogether:
 
 ```
 func example(r io.ReadCloser) (err error) {
-    defer r.Close()
+    defer r.Close() // Oh no, we'll never know if this errors :(
 
 	// ... code that reads from r ...
 }
 ```
 
-Which might not be the best case. You should either handle it, or at least log
-it so you're aware of that there are issues closing the reader for whatever
-reason.
+This is pretty common among the codebases I've seen (and I'm also an offender of
+this). It's not really the proper way to do things. You should either handle the
+error, or at least log it so you're aware of that there are issues closing the
+reader for whatever reason.
 
-## Luckily we now have `errors.Join` 🤓
+## Luckily we now have errors.Join 🤓
 
 With the Go 1.20 release, you can now join errors so that you don't override the
 original error with the `(io.ReadCloser).Close()` error and not need to make the
@@ -103,5 +108,20 @@ Wow! We just saved two (!!) lines of code everytime we need to `defer` a
 `(io.ReadCloser).Close()` call.
 
 And here's a working example of this: https://go.dev/play/p/JDE-AJvujJr
+
+## TL;DR
+
+Please set errors from `defer` calls with `errors.Join`:
+
+```
+func example(r io.ReadCloser) (err error) {
+	defer func() {
+		err = errors.Join(err, r.Close()) // Magic!
+	}()
+
+	// ... code that reads from r ...
+}
+
+```
 
 Enjoy!
