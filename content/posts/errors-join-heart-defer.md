@@ -91,15 +91,19 @@ fmt.Println(joinedErr)
 ```
 
 You can even take it one step further and get rid of the anonymous function by
-defining a "joinErrs(...)" that takes a pointer to the original error, like so:
+defining a "joinErrs(...)" that takes a pointer to the original error. We must
+pass the close function and invoke it within the `joinErrs(...)` because `defer`
+will evaluate the parameters directly (thanks to abhinavg for pointing this out[1]).
+
+So, we end up with something like this:
 
 ```go
-func joinErrs(origErr *error, newErr error) {
-	*origErr = errors.Join(*origErr, newErr)
+func joinErrs(origErr *error, fn func() error) {
+	*origErr = errors.Join(*origErr, fn())
 }
 
 func example(r io.ReadCloser) (err error) {
-	defer joinErrs(&err, r.Close()) // Woho! Only a single line :D
+	defer joinErrs(&err, r.Close) // Woho! Only a single line :D
 
 	// ... code that reads from r ...
 }
@@ -108,7 +112,8 @@ func example(r io.ReadCloser) (err error) {
 Wow! We just saved two (!!) lines of code everytime we need to `defer` a
 `(io.ReadCloser).Close()` call.
 
-And here's a working example of this: https://go.dev/play/p/JDE-AJvujJr
+And here's a working example of this: https://go.dev/play/p/sEMxcWYHKBK
+
 
 ## TL;DR
 
@@ -125,4 +130,11 @@ func example(r io.ReadCloser) (err error) {
 }
 ```
 
-Enjoy!
+### Errata
+
+ * [1]: [abhinavg kindly pointed out on Reddit](https://www.reddit.com/r/golang/comments/11luvxm/comment/jbeb92w/)
+   that an earlier version of this post made the mistake of passing `r.Close()`
+   instead of `r.Close` as an argument to `joinErrs(...)`. Because `defer` will
+   evaluate the parameters immediately when calling the `example` function it
+   would erroneously close the reader even before reading from it.
+   See: https://www.reddit.com/r/golang/comments/11luvxm/comment/jbeb92w/
