@@ -112,7 +112,7 @@ And here's a working example of this: https://go.dev/play/p/JDE-AJvujJr
 
 ## TL;DR
 
-Please set errors from `defer` calls with
+You can set errors from `defer` calls with
 [`errors.Join`](https://pkg.go.dev/errors#Join):
 
 ```go
@@ -123,7 +123,6 @@ func example(r io.ReadCloser) (err error) {
 
 	// ... code that reads from r ...
 }
-
 ```
 
 Enjoy!
