@@ -3,7 +3,7 @@ title = "wstrm"
 enableRobotsTXT = true
 enableEmoji = true
 # Copyright notice. This is displayer in the footer.
-copyright = "Copyright &copy; 2018-2020 William Wennerström"
+copyright = "Copyright &copy; William Wennerström"
 theme = "hugo_theme_pickles"
 
 [params]
